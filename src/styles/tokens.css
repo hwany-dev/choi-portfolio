@@ -53,6 +53,10 @@
   --word-dim: 0.15;                  /* 단어 reveal 시작 opacity */
   --img-fallback-ratio: 4 / 3;       /* 이미지 비율을 모를 때 */
 
+  /* WORKS 상세 */
+  --detail-cover-max-h: 90svh;
+  --detail-gap: clamp(40px, 7svh, 96px);
+
   /* PROFILE */
   --profile-ratio: 4 / 5;
   --profile-max-h: 72svh;

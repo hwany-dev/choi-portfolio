@@ -15,10 +15,12 @@ interface Props {
   work: Work
   /** 열 인덱스 — 열마다 약간의 등장 delay */
   column: number
+  /** 상세로 이동하기 직전 (복귀 상태 저장) */
+  onOpen: () => void
 }
 
 /** WORKS 카드: 이미지만, hover 시 하단 캡션 + 이미지 살짝 확대 (§4-3) */
-export default function WorkCard({ work, column }: Props) {
+export default function WorkCard({ work, column, onOpen }: Props) {
   const [nearRef, near] = useInView<HTMLAnchorElement>({ rootMargin: PREFETCH_MARGIN })
   const [revealRef, revealed] = useInView<HTMLAnchorElement>({ rootMargin: REVEAL_MARGIN })
   const ref = useCallback(
@@ -39,6 +41,7 @@ export default function WorkCard({ work, column }: Props) {
       className={styles.card}
       data-in={revealed}
       data-cursor="hover"
+      onClick={onOpen}
       style={{ '--col': column } as CSSProperties}
     >
       <Img src={src} alt={work.title} className={styles.thumb} imgClassName={styles.thumbImg} />

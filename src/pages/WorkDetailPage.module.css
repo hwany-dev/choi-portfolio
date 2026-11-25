@@ -1,0 +1,227 @@
+.page {
+  min-height: 100svh;
+  padding-top: var(--nav-h, 0px);
+}
+
+.state {
+  min-height: 100svh;
+  align-content: center;
+  font-size: var(--fs-body);
+}
+
+.notFound {
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-large);
+  line-height: var(--lh-large);
+}
+
+.link {
+  display: inline-block;
+  margin-top: 1em;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ── 1. 메인 이미지: 풀폭, 최대 90svh, 진입 시 scale 1.08 → 1 ── */
+.cover {
+  width: 100%;
+  max-height: var(--detail-cover-max-h);
+}
+
+.coverImg {
+  transform-origin: 50% 50%;
+}
+
+.cover[data-status='loaded'] .coverImg {
+  animation: cover-in 1.6s var(--ease-out) both;
+}
+
+@keyframes cover-in {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* ── 본문 그리드 ── */
+.body {
+  align-content: start;
+  row-gap: var(--detail-gap);
+  padding-top: var(--detail-gap);
+  padding-bottom: var(--section-pad-bottom);
+}
+
+/* 본문 안에서 같은 컬럼을 쓰는 하위 그리드 (부모 패딩 안쪽 전체 폭) */
+.meta,
+.pager,
+.metaRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+}
+
+/* ── 2. 타이틀 ── */
+.title {
+  grid-column: var(--col-label) / -1;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-large);
+  line-height: 1.05;
+}
+
+.titleSkeleton {
+  grid-column: var(--col-label) / var(--col-aside);
+  height: calc(var(--fs-h2) * 1.1);
+  background: var(--placeholder);
+}
+
+/* ── 3. 메타: 라벨 col2(dim), 값 col5~, 행마다 헤어라인 (라인도 col2부터) ── */
+.metaLabel,
+.metaValue {
+  padding-block: 0.9em;
+  border-top: var(--hairline) solid var(--line-strong);
+}
+
+.metaRow:last-child .metaLabel,
+.metaRow:last-child .metaValue {
+  border-bottom: var(--hairline) solid var(--line-strong);
+}
+
+.metaLabel {
+  grid-column: var(--col-label) / var(--col-content);
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+  line-height: 1.6;
+}
+
+.metaValue {
+  grid-column: var(--col-content) / -1;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  white-space: pre-line;
+}
+
+/* ── 4. 상세 이미지: col2~col8, 가로 2장 연속이면 2열 ── */
+.images {
+  grid-column: var(--col-label) / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--masonry-gap);
+}
+
+.image {
+  grid-column: span 2;
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+}
+
+.image[data-paired='true'] {
+  grid-column: span 1;
+}
+
+.image[data-in='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── 5. Prev / Back / Next ── */
+.pager {
+  row-gap: var(--block-gap);
+}
+
+/* 상단 헤어라인 — col2부터 */
+.pager::before {
+  content: '';
+  grid-column: var(--col-label) / -1;
+  grid-row: 1;
+  height: var(--hairline);
+  margin-bottom: calc(var(--detail-gap) - var(--block-gap));
+  background: var(--line-strong);
+}
+
+.prev {
+  grid-column: var(--col-label) / var(--col-content);
+  grid-row: 2;
+}
+
+.back {
+  grid-column: var(--col-content) / var(--col-aside);
+  grid-row: 2;
+}
+
+.next {
+  grid-column: var(--col-aside) / -1;
+  grid-row: 2;
+  text-align: right;
+}
+
+.pagerLink {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.next .pagerLink {
+  align-items: flex-end;
+}
+
+.pagerLabel {
+  font-size: var(--fs-lead);
+  letter-spacing: var(--ls-base);
+  line-height: var(--lh-large);
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.18em;
+}
+
+.pagerTitle {
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .metaLabel {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+
+  .metaValue {
+    grid-column: 1 / -1;
+    padding-top: 0.3em;
+    border-top: 0;
+  }
+
+  .metaRow:last-child .metaLabel {
+    border-bottom: 0;
+  }
+
+  .images {
+    grid-column: 1 / -1;
+  }
+
+  .pager::before {
+    grid-column: 1 / -1;
+  }
+
+  .prev {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .next {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .back {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}

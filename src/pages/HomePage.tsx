@@ -1,9 +1,8 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useSiteSettings, useWorks } from '../data/queries'
-import { useActiveSection, useSectionRef } from '../hooks/useActiveSection'
-import { ScrollTrigger } from '../lib/lenis'
-import { scrollToSection } from '../lib/navigation'
-import { isSectionId, SECTIONS, type Section, type SectionId } from '../lib/sections'
+import { useSectionRef } from '../hooks/useActiveSection'
+import { useScrollRestore } from '../hooks/useScrollRestore'
+import { SECTIONS, type Section, type SectionId } from '../lib/sections'
 import Home from '../sections/Home/Home'
 import Profile from '../sections/Profile/Profile'
 import Works from '../sections/Works/Works'
@@ -18,7 +17,7 @@ const INTROS: Partial<Record<SectionId, ReactNode>> = {
  * 임시: 섹션 뼈대. 8단계부터 sections/(ProjectList, Footer)로 하나씩 교체된다.
  * [data-anchor] = 내비 클릭 시 도착 지점 (전환 연출 뒤 콘텐츠 시작).
  */
-function PlaceholderSection({ section, children }: { section: Section; children?: ReactNode }) {
+function PlaceholderSection({ section }: { section: Section }) {
   const ref = useSectionRef(section.id)
   return (
     <section id={section.id} ref={ref} data-theme={section.theme}>
@@ -31,45 +30,21 @@ function PlaceholderSection({ section, children }: { section: Section; children?
         <p className="col-label" style={{ fontSize: 'var(--fs-caption)' }}>
           {section.label}
         </p>
-        <div className="col-content">{children}</div>
       </div>
     </section>
   )
 }
 
-/** 진입 시 hash가 있으면 해당 섹션으로, 스크롤 중엔 현재 섹션으로 hash 갱신 */
-function useHashSync(ready: boolean) {
-  const [initialHash] = useState(() => window.location.hash.slice(1))
-  const [restored, setRestored] = useState(!isSectionId(initialHash))
-  const active = useActiveSection()
-
-  useEffect(() => {
-    if (restored || !ready || !isSectionId(initialHash)) return
-    const frame = requestAnimationFrame(() => {
-      ScrollTrigger.refresh()
-      scrollToSection(initialHash, true)
-      setRestored(true)
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [ready, restored, initialHash])
-
-  useEffect(() => {
-    if (!restored || !active) return
-    const { pathname, search } = window.location
-    history.replaceState(history.state, '', active === 'home' ? pathname + search : `#${active}`)
-  }, [active, restored])
-}
-
 export default function HomePage() {
   const settings = useSiteSettings()
   const works = useWorks()
-  useHashSync(!settings.isPending && !works.isPending)
+  const { restored } = useScrollRestore(!settings.isPending && !works.isPending)
 
   return (
     <main>
       <Home />
       <Profile />
-      <Works />
+      <Works initial={restored} />
       {SECTIONS.filter((s) => s.id === 'project-list' || s.id === 'footer').map((section) => (
         <PlaceholderSection key={section.id} section={section} />
       ))}

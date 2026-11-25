@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from 'react'
 import styles from './Img.module.css'
+import { ratioCache } from './ratioCache'
 
 interface Props {
   /** undefined = 아직 URL 조회 중(빈 skeleton) / null = 이미지 없음(대체 텍스트) */
@@ -11,23 +12,22 @@ interface Props {
   priority?: boolean
   className?: string
   imgClassName?: string
-  onLoad?: () => void
+  /** 원본 비율(가로/세로)과 함께 호출 */
+  onLoad?: (ratio: number) => void
 }
 
-/**
- * 이미지 + 비율 유지 skeleton. src가 없거나 로드 실패 시 테마 dim 배경 + alt 텍스트.
- */
+type Status = 'loading' | 'loaded' | 'error'
+
+/** 이미지 + 비율 유지 skeleton. src가 없거나 로드 실패 시 테마 dim 배경 + alt 텍스트 */
 export default function Img({ src, alt, ratio, priority = false, className, imgClassName, onLoad }: Props) {
-  const [state, setState] = useState<{ src: typeof src; status: 'loading' | 'loaded' | 'error'; natural?: string }>({
-    src,
-    status: 'loading',
-  })
+  const [state, setState] = useState<{ src: typeof src; status: Status }>({ src, status: 'loading' })
   // src가 바뀌면 상태 리셋 (렌더 중 동기화)
   if (state.src !== src) setState({ src, status: 'loading' })
 
   const pending = src === undefined
   const failed = src === null || src === '' || state.status === 'error'
-  const style: CSSProperties = { aspectRatio: ratio ?? state.natural ?? 'var(--img-fallback-ratio)' }
+  const natural = src ? ratioCache.get(src) : undefined
+  const style: CSSProperties = { aspectRatio: ratio ?? (natural ? String(natural) : 'var(--img-fallback-ratio)') }
 
   return (
     <div
@@ -47,8 +47,10 @@ export default function Img({ src, alt, ratio, priority = false, className, imgC
           fetchPriority={priority ? 'high' : 'auto'}
           onLoad={(e) => {
             const { naturalWidth: w, naturalHeight: h } = e.currentTarget
-            setState({ src, status: 'loaded', natural: w && h ? `${w} / ${h}` : undefined })
-            onLoad?.()
+            const r = w && h ? w / h : 0
+            if (r) ratioCache.set(src, r)
+            setState({ src, status: 'loaded' })
+            if (r) onLoad?.(r)
           }}
           onError={() => setState({ src, status: 'error' })}
         />

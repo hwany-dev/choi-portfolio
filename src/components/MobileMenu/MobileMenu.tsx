@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useSiteSettings } from '../../data/queries'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { startScroll, stopScroll } from '../../lib/lenis'
-import { menuOpen, scrollToSection } from '../../lib/navigation'
+import { menuOpen } from '../../lib/navigation'
+import { useGoToSection } from '../../hooks/useGoToSection'
 import { NAV_SECTIONS, type NavSectionId } from '../../lib/sections'
 import PlusIcon from '../Nav/PlusIcon'
 import styles from './MobileMenu.module.css'
@@ -12,6 +13,7 @@ export default function MobileMenu() {
   const open = menuOpen.useValue()
   const active = useActiveSection()
   const { data: settings } = useSiteSettings()
+  const goTo = useGoToSection()
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function MobileMenu() {
 
   const go = (id: NavSectionId) => {
     menuOpen.set(false)
-    requestAnimationFrame(() => scrollToSection(id))
+    requestAnimationFrame(() => goTo(id))
   }
 
   return (
@@ -60,7 +62,7 @@ export default function MobileMenu() {
         {NAV_SECTIONS.map((s) => (
           <li key={s.id}>
             <a
-              href={`#${s.id}`}
+              href={`/#${s.id}`}
               className={styles.link}
               data-active={active === s.id}
               onClick={(e) => {

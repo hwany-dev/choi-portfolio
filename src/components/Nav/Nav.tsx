@@ -2,7 +2,8 @@ import { useLayoutEffect, useRef, type MouseEvent } from 'react'
 import { useSiteSettings } from '../../data/queries'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { ScrollTrigger } from '../../lib/lenis'
-import { menuOpen, navPinned, scrollToSection } from '../../lib/navigation'
+import { menuOpen, navPinned } from '../../lib/navigation'
+import { useGoToSection } from '../../hooks/useGoToSection'
 import { NAV_SECTIONS, type NavSectionId } from '../../lib/sections'
 import PlusIcon from './PlusIcon'
 import { useNavProgress } from './useNavProgress'
@@ -28,6 +29,7 @@ export default function Nav({ variant }: Props) {
   const pinned = navPinned.useValue()
   const open = menuOpen.useValue()
   const { data: settings } = useSiteSettings()
+  const goTo = useGoToSection()
 
   // inline 내비가 화면 상단에 닿으면 pinned → 고정 내비로 교체
   useLayoutEffect(() => {
@@ -52,7 +54,7 @@ export default function Nav({ variant }: Props) {
 
   const onTab = (id: NavSectionId) => (e: MouseEvent) => {
     e.preventDefault()
-    scrollToSection(id)
+    goTo(id)
   }
 
   return (
@@ -64,14 +66,14 @@ export default function Nav({ variant }: Props) {
       aria-hidden={hidden || undefined}
       inert={hidden}
     >
-      <button type="button" className={styles.plus} onClick={() => scrollToSection('home')} aria-label="Back to top">
+      <button type="button" className={styles.plus} onClick={() => goTo('home')} aria-label="Back to top">
         <PlusIcon />
       </button>
 
       {NAV_SECTIONS.map((s) => (
         <a
           key={s.id}
-          href={`#${s.id}`}
+          href={`/#${s.id}`}
           className={styles.item}
           style={{ gridColumnStart: NAV_COLUMN[s.id] }}
           data-active={active === s.id}

@@ -5,7 +5,9 @@ import type { Work } from '../../data/types'
 import { useSectionRef } from '../../hooks/useActiveSection'
 import { useMediaQuery, usePrefersReducedMotion } from '../../hooks/useMediaQuery'
 import { gsap, scrollToTarget } from '../../lib/lenis'
+import { useLocation } from 'react-router'
 import { getNavHeight } from '../../lib/navigation'
+import { saveWorksReturn } from '../../lib/worksReturn'
 import BarExpandTransition from '../../components/transitions/BarExpandTransition'
 import GridLines from '../../components/GridLines/GridLines'
 import WorkCard from './WorkCard'
@@ -33,16 +35,22 @@ function toColumns<T>(items: readonly T[], count: number): T[][] {
   return cols
 }
 
+interface Props {
+  /** 상세에서 복귀 시 복원할 필터·개수 */
+  initial?: { filter: string; count: number } | null
+}
+
 /** WORKS (§4-3, 05~08 캡처) */
-export default function Works() {
+export default function Works({ initial }: Props) {
   const { data: works, isPending, isError } = useWorks()
   const reduced = usePrefersReducedMotion()
   const mobile = useMediaQuery('(max-width: 768px)')
   const columnCount = useColumnCount()
+  const location = useLocation()
 
-  const [filter, setFilter] = useState(ALL) // 탭 하이라이트 (즉시)
-  const [shownFilter, setShownFilter] = useState(ALL) // 그리드에 반영된 필터 (fade 후)
-  const [count, setCount] = useState(PAGE_SIZE)
+  const [filter, setFilter] = useState(initial?.filter ?? ALL) // 탭 하이라이트 (즉시)
+  const [shownFilter, setShownFilter] = useState(initial?.filter ?? ALL) // 그리드에 반영된 필터 (fade 후)
+  const [count, setCount] = useState(Math.max(initial?.count ?? PAGE_SIZE, PAGE_SIZE))
   const [fading, setFading] = useState(false)
   const fadeTimer = useRef(0)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -100,6 +108,12 @@ export default function Works() {
     return () => ctx.revert()
   }, [reduced, mobile, columnCount, works])
 
+  // 카드 클릭 순간의 위치·필터·개수 저장 → 복귀 시 복원
+  const onOpen = useCallback(
+    () => saveWorksReturn({ key: location.key, scrollY: window.scrollY, filter: shownFilter, count }),
+    [location.key, shownFilter, count],
+  )
+
   const total = works?.length ?? 0
 
   return (
@@ -146,7 +160,7 @@ export default function Works() {
             : columns.map((col, ci) => (
                 <div key={ci} className={styles.column} data-column={ci}>
                   {col.map((work) => (
-                    <WorkCard key={work.id} work={work} column={ci} />
+                    <WorkCard key={work.id} work={work} column={ci} onOpen={onOpen} />
                   ))}
                 </div>
               ))}
