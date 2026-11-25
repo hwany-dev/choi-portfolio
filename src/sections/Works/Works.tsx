@@ -7,7 +7,7 @@ import { useMediaQuery, usePrefersReducedMotion } from '../../hooks/useMediaQuer
 import { gsap, scrollToTarget } from '../../lib/lenis'
 import { useLocation } from 'react-router'
 import { getNavHeight } from '../../lib/navigation'
-import { saveWorksReturn } from '../../lib/worksReturn'
+import { saveWorksReturn, worksView } from '../../lib/worksReturn'
 import BarExpandTransition from '../../components/transitions/BarExpandTransition'
 import GridLines from '../../components/GridLines/GridLines'
 import WorkCard from './WorkCard'
@@ -107,6 +107,11 @@ export default function Works({ initial }: Props) {
     }, masonry)
     return () => ctx.revert()
   }, [reduced, mobile, columnCount, works])
+
+  useEffect(() => {
+    const cur = worksView.get()
+    if (cur.filter !== shownFilter || cur.count !== count) worksView.set({ filter: shownFilter, count })
+  }, [shownFilter, count])
 
   // 카드 클릭 순간의 위치·필터·개수 저장 → 복귀 시 복원
   const onOpen = useCallback(

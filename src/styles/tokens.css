@@ -57,6 +57,10 @@
   --detail-cover-max-h: 90svh;
   --detail-gap: clamp(40px, 7svh, 96px);
 
+  /* PROJECT LIST */
+  --list-row-pad: clamp(16px, 2.4svh, 32px);
+  --list-plus-size: clamp(14px, 1.2vw, 20px);
+
   /* PROFILE */
   --profile-ratio: 4 / 5;
   --profile-max-h: 72svh;

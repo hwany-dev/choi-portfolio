@@ -1,0 +1,121 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  align-items: start;
+  padding-top: var(--section-pad-top);
+  padding-bottom: var(--section-pad-bottom);
+}
+
+/* 좌측 소문구: col2, 리스트를 지나는 동안 sticky */
+.aside {
+  grid-column: var(--col-label) / var(--col-content);
+  grid-row: 1;
+  position: sticky;
+  top: calc(var(--nav-h, 0px) + var(--block-gap));
+}
+
+.intro {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  line-height: 1.35;
+}
+
+/* 우측 리스트: col5~col8 */
+.list {
+  grid-column: var(--col-content) / -1;
+  grid-row: 1;
+}
+
+.group + .group {
+  margin-top: var(--block-gap);
+}
+
+.year {
+  padding-bottom: 0.8em;
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+}
+
+.row {
+  border-top: var(--hairline) solid var(--line-strong);
+  opacity: var(--row-opacity, 1);
+}
+
+.group:last-child .row:last-child {
+  border-bottom: var(--hairline) solid var(--line-strong);
+}
+
+.link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--gutter);
+  row-gap: 0.5em;
+  padding-block: var(--list-row-pad);
+}
+
+.title {
+  grid-column: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: var(--fs-h3);
+  letter-spacing: var(--ls-large);
+  line-height: var(--lh-large);
+}
+
+.plus {
+  grid-column: 2;
+  grid-row: 1;
+  width: var(--list-plus-size);
+  height: var(--list-plus-size);
+  margin-top: 0.35em;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.meta {
+  grid-column: 1 / -1;
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+  line-height: 1.4;
+}
+
+/* hover: 중앙 강조와 무관하게 밝게 + 회전 */
+.row:hover,
+.row:focus-within {
+  opacity: 1 !important;
+}
+
+.link:hover .plus,
+.link:focus-visible .plus {
+  transform: rotate(45deg);
+}
+
+.skeleton {
+  height: 60svh;
+  background: var(--placeholder);
+}
+
+.message {
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+}
+
+/* mobile: 소문구는 리스트 위로, 행은 Title + + 만 */
+@media (max-width: 768px) {
+  .aside {
+    grid-column: 1 / -1;
+    position: static;
+    margin-bottom: var(--block-gap);
+  }
+
+  .list {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .meta {
+    display: none;
+  }
+}

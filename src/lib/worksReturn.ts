@@ -3,7 +3,12 @@
  * 카드 클릭 순간 저장하고, 홈이 "복귀"로 열릴 때 읽은 뒤 지운다.
  * key = 저장 당시 홈 히스토리 항목의 location.key → 브라우저 뒤로가기 판별용.
  */
+import { createStore } from './store'
+
 const STORAGE_KEY = 'works-return'
+
+/** 현재 WORKS 필터·개수 — PROJECT LIST에서 상세로 갈 때도 같이 저장하려고 공유 */
+export const worksView = createStore({ filter: 'ALL', count: 12 })
 
 export interface WorksReturn {
   key: string

@@ -6,6 +6,7 @@ import { SECTIONS, type Section, type SectionId } from '../lib/sections'
 import Home from '../sections/Home/Home'
 import Profile from '../sections/Profile/Profile'
 import Works from '../sections/Works/Works'
+import ProjectList from '../sections/ProjectList/ProjectList'
 import PlusExpandTransition from '../components/transitions/PlusExpandTransition'
 
 /** 섹션 시작부 전환 연출 (§3-8). 중앙 라벨은 하드코딩 허용 항목 */
@@ -14,7 +15,7 @@ const INTROS: Partial<Record<SectionId, ReactNode>> = {
 }
 
 /**
- * 임시: 섹션 뼈대. 8단계부터 sections/(ProjectList, Footer)로 하나씩 교체된다.
+ * 임시: 섹션 뼈대. 9단계에서 sections/Footer로 교체된다.
  * [data-anchor] = 내비 클릭 시 도착 지점 (전환 연출 뒤 콘텐츠 시작).
  */
 function PlaceholderSection({ section }: { section: Section }) {
@@ -45,7 +46,8 @@ export default function HomePage() {
       <Home />
       <Profile />
       <Works initial={restored} />
-      {SECTIONS.filter((s) => s.id === 'project-list' || s.id === 'footer').map((section) => (
+      <ProjectList />
+      {SECTIONS.filter((s) => s.id === 'footer').map((section) => (
         <PlaceholderSection key={section.id} section={section} />
       ))}
     </main>
