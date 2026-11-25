@@ -3,6 +3,7 @@
 사이트의 글과 사진은 전부 **Firebase 콘솔**에서 바꿉니다.
 코드를 고치거나 다시 배포할 필요는 없습니다. **저장하고 사이트를 새로고침하면 바로 반영됩니다.**
 
+- 사이트 주소: https://choi-portfolio-98f6a.web.app
 - Firebase 콘솔: https://console.firebase.google.com/project/choi-portfolio-98f6a
   - 글·정보 → 왼쪽 메뉴 **Firestore Database**
   - 사진 → 왼쪽 메뉴 **Storage**
