@@ -1,0 +1,81 @@
+/* ── Design tokens (CLAUDE.md §3, §5) ─────────────────────────── */
+:root {
+  /* 팔레트: 2색. invert 시 --paper ↔ --ink 값만 맞바꾼다 */
+  --c-light: #f0f0f0;
+  --c-dark: #0e0e0e;
+  --paper: var(--c-light);
+  --ink: var(--c-dark);
+
+  /* 파생 비율 (color-mix) */
+  --mix-dim: 40%;
+  --mix-hairline: 6%;
+  --mix-hairline-strong: 12%;
+
+  /* 폰트 */
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-display: 'Archivo Variable', var(--font-sans);
+  --wordmark-stretch: 125%;
+  --wordmark-weight: 900;
+
+  /* 타이포 스케일 — 전부 clamp, 12px 미만 금지 */
+  --fs-caption: clamp(12px, 0.70rem + 0.15vw, 13px);
+  --fs-body:    clamp(12px, 0.68rem + 0.35vw, 17px);
+  --fs-nav:     clamp(12px, 0.70rem + 0.30vw, 16px);
+  --fs-lead:    clamp(15px, 0.80rem + 0.80vw, 24px);
+  --fs-lead-xl: clamp(20px, 0.90rem + 1.70vw, 46px);
+  --fs-h3:      clamp(20px, 0.90rem + 1.40vw, 36px);
+  --fs-h2:      clamp(28px, 1.00rem + 3.00vw, 64px);
+
+  --ls-base: -0.02em;
+  --ls-large: -0.03em;
+  --lh-wordmark: 0.8;
+  --lh-large: 1.1;
+  --lh-body: 1.5;
+  --fw-regular: 400;
+  --fw-nav: 600;
+
+  /* 레이아웃 */
+  --gutter: clamp(16px, 1.2vw, 24px);
+  --masonry-gap: 16px;
+  --hairline: 1px;
+  --nav-tick: 6px;
+
+  /* 모션 */
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1); /* ≈ GSAP power3.out */
+  --dur-theme: 0.5s;
+  --dur-reveal: 0.9s;
+  --dur-hover: 0.6s;
+  --reveal-distance: 80px;
+
+  /* 커서 */
+  --cursor-size: 10px;
+  --cursor-size-hover: 40px;
+
+  /* z-index */
+  --z-content: 1;
+  --z-transition: 10;
+  --z-nav: 50;
+  --z-fixed: 60;
+  --z-menu: 80;
+  --z-cursor: 100;
+}
+
+html[data-inverted] {
+  --paper: var(--c-dark);
+  --ink: var(--c-light);
+}
+
+/* ── 섹션 테마 ────────────────────────────────────────────────
+   파생색은 --fg 가 정해진 요소에서 다시 계산되도록 [data-theme]에 선언 */
+[data-theme='light'] { --bg: var(--paper); --fg: var(--ink); }
+[data-theme='dark']  { --bg: var(--ink);   --fg: var(--paper); }
+
+[data-theme] {
+  --fg-dim: color-mix(in srgb, var(--fg) var(--mix-dim), transparent);
+  --line: color-mix(in srgb, var(--fg) var(--mix-hairline), transparent);
+  --line-strong: color-mix(in srgb, var(--fg) var(--mix-hairline-strong), transparent);
+  --placeholder: color-mix(in srgb, var(--fg) var(--mix-hairline-strong), var(--bg));
+  background-color: var(--bg);
+  color: var(--fg);
+  transition: background-color var(--dur-theme), color var(--dur-theme);
+}

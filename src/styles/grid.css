@@ -1,0 +1,71 @@
+/* ── 8 / 4 / 2 컬럼 그리드 (CLAUDE.md §3-1) ─────────────────────
+   모든 텍스트 블록의 시작 x좌표는 컬럼 시작선에 맞춘다.
+   배치는 의미 단위 변수(--col-*)로 관리 → 브레이크포인트에서 값만 바뀐다.
+   값은 grid-column 라인 번호(1-based). */
+:root {
+  --cols: 8;
+  /* 1컬럼 폭 (100vw 기준 — 스크롤바 보정이 필요하면 JS에서 덮어쓴다) */
+  --col-w: calc((100vw - 2 * var(--gutter)) / var(--cols));
+
+  /* 내비 탭 시작 컬럼 */
+  --col-nav-home: 2;
+  --col-nav-profile: 4;
+  --col-nav-works: 6;
+  --col-nav-list: 7;
+  --col-nav-instagram: 8;
+
+  --col-label: 2;       /* 소문구, 태그라인, 메타 라벨 */
+  --col-content: 5;     /* 카피, 본문, 리스트, 연락처, 메타 값 */
+  --col-aside: 8;       /* Back to top 등 */
+  --col-end: -1;        /* 마지막 컬럼 끝 */
+  --col-media-start: 2; /* PROFILE 사진 col2~col4 */
+  --col-media-end: 5;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --cols: 4;
+    --col-label: 1;
+    --col-content: 3;
+    --col-aside: 4;
+    --col-media-start: 1;
+    --col-media-end: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --cols: 2;
+    --col-label: 1;
+    --col-content: 1;
+    --col-aside: 2;
+    --col-media-start: 1;
+    --col-media-end: -1;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: 0;
+  padding-inline: var(--gutter);
+}
+
+/* 의미 단위 배치 유틸 */
+.col-label   { grid-column: var(--col-label) / var(--col-content); }
+.col-content { grid-column: var(--col-content) / var(--col-end); }
+.col-aside   { grid-column: var(--col-aside) / var(--col-end); }
+.col-media   { grid-column: var(--col-media-start) / var(--col-media-end); }
+.col-full    { grid-column: 1 / -1; }
+
+@media (max-width: 768px) {
+  .col-label { grid-column: 1 / -1; }
+}
+
+/* 배경 세로 헤어라인 — 각 컬럼 시작선에 1px (테마의 --line 사용) */
+.grid-lines {
+  background-image: linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline));
+  background-size: calc((100% - 2 * var(--gutter)) / var(--cols)) 100%;
+  background-position: var(--gutter) 0;
+  background-repeat: repeat-x;
+}
