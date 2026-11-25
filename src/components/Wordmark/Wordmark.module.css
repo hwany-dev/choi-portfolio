@@ -33,3 +33,18 @@
   flex: none;
   width: var(--wordmark-space);
 }
+
+/* 모바일 두 줄: 줄마다 좌우 끝까지 분배 */
+.stacked {
+  display: block;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.line + .line {
+  margin-top: var(--wordmark-line-gap);
+}

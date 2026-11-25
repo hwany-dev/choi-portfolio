@@ -55,7 +55,7 @@ export default function Home() {
       <GridLines diagonal />
 
       {settings?.siteTitle ? (
-        <Wordmark as="h1" text={settings.siteTitle} reveal />
+        <Wordmark as="h1" text={settings.siteTitle} reveal stackOnMobile />
       ) : (
         <div className={styles.wordmarkSkeleton} />
       )}

@@ -5,13 +5,16 @@ interface Options {
   fill: number
   /** font-size 상한 = 뷰포트 높이 × 이 값 */
   maxViewportHeight: number
+  /** 배치가 바뀌면(한 줄 ↔ 여러 줄) 다시 측정하기 위한 키 */
+  layout?: string
 }
 
 /**
  * 워드마크 font-size 계산. 글자 폭은 font-size에 비례하므로
  * 현재 크기에서 [data-letter] 폭 합을 재서 1px당 폭을 구하고, 목표 폭에 맞춘다.
+ * [data-line]으로 여러 줄이면 가장 긴 줄 기준.
  */
-export function useFitText(text: string, { fill, maxViewportHeight }: Options) {
+export function useFitText(text: string, { fill, maxViewportHeight, layout }: Options) {
   const [el, setEl] = useState<HTMLElement | null>(null)
   const [fontSize, setFontSize] = useState<number | null>(null)
 
@@ -22,10 +25,12 @@ export function useFitText(text: string, { fill, maxViewportHeight }: Options) {
     const measure = () => {
       if (!alive) return
       const current = parseFloat(getComputedStyle(el).fontSize)
-      let sum = 0
-      el.querySelectorAll<HTMLElement>('[data-letter]').forEach((l) => {
-        sum += l.getBoundingClientRect().width
-      })
+      const lines = [...el.querySelectorAll<HTMLElement>('[data-line]')]
+      const sum = Math.max(
+        ...(lines.length ? lines : [el]).map((line) =>
+          [...line.querySelectorAll<HTMLElement>('[data-letter]')].reduce((s, l) => s + l.getBoundingClientRect().width, 0),
+        ),
+      )
       if (!sum || !current) return
       const perPx = sum / current
       const size = Math.min((el.clientWidth * fill) / perPx, window.innerHeight * maxViewportHeight)
@@ -44,7 +49,7 @@ export function useFitText(text: string, { fill, maxViewportHeight }: Options) {
       window.removeEventListener('resize', measure)
       document.fonts.removeEventListener('loadingdone', measure)
     }
-  }, [el, text, fill, maxViewportHeight])
+  }, [el, text, fill, maxViewportHeight, layout])
 
   return { ref: setEl, el, fontSize }
 }
