@@ -1,23 +1,21 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useSiteSettings, useWorks } from '../data/queries'
-import { buildCategories } from '../data/parse'
 import { useActiveSection, useSectionRef } from '../hooks/useActiveSection'
 import { ScrollTrigger } from '../lib/lenis'
 import { scrollToSection } from '../lib/navigation'
 import { isSectionId, SECTIONS, type Section, type SectionId } from '../lib/sections'
 import Home from '../sections/Home/Home'
 import Profile from '../sections/Profile/Profile'
-import BarExpandTransition from '../components/transitions/BarExpandTransition'
+import Works from '../sections/Works/Works'
 import PlusExpandTransition from '../components/transitions/PlusExpandTransition'
 
 /** 섹션 시작부 전환 연출 (§3-8). 중앙 라벨은 하드코딩 허용 항목 */
 const INTROS: Partial<Record<SectionId, ReactNode>> = {
-  works: <BarExpandTransition lines={['Selected', 'Works']} />,
   footer: <PlusExpandTransition />,
 }
 
 /**
- * 임시: 섹션 뼈대. 6단계부터 sections/(Works, ProjectList, Footer)로 하나씩 교체된다.
+ * 임시: 섹션 뼈대. 8단계부터 sections/(ProjectList, Footer)로 하나씩 교체된다.
  * [data-anchor] = 내비 클릭 시 도착 지점 (전환 연출 뒤 콘텐츠 시작).
  */
 function PlaceholderSection({ section, children }: { section: Section; children?: ReactNode }) {
@@ -71,16 +69,9 @@ export default function HomePage() {
     <main>
       <Home />
       <Profile />
-      {SECTIONS.filter((s) => s.id !== 'home' && s.id !== 'profile').map((section) => (
-        <PlaceholderSection key={section.id} section={section}>
-          {section.id === 'works' && works.data && (
-            <p style={{ fontSize: 'var(--fs-caption)' }}>
-              {buildCategories(works.data)
-                .map((c) => `${c.label} (${c.count})`)
-                .join('  ')}
-            </p>
-          )}
-        </PlaceholderSection>
+      <Works />
+      {SECTIONS.filter((s) => s.id === 'project-list' || s.id === 'footer').map((section) => (
+        <PlaceholderSection key={section.id} section={section} />
       ))}
     </main>
   )

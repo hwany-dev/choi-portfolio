@@ -10,7 +10,7 @@ import SectionLabel from '../../components/SectionLabel/SectionLabel'
 import WordReveal from '../../components/WordReveal/WordReveal'
 import styles from './Profile.module.css'
 
-/** PROFILE (§4-2, 10 캡처 톤): 흑백 사진(hover 컬러) + 이름·직함 + 소개 단어 reveal */
+/** PROFILE (§4-2, 10 캡처 톤): 흑백 사진 + 이름·직함 + 소개 단어 reveal */
 export default function Profile() {
   const { data: settings } = useSiteSettings()
   const reduced = usePrefersReducedMotion()

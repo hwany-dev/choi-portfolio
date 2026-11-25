@@ -26,6 +26,13 @@ export function normalizeCategory(value: string): string {
   return value.trim().toUpperCase()
 }
 
+/** 표시용: 3글자 이하는 약어로 보고 대문자(BTL), 나머지는 단어 첫 글자만 대문자(Pop Up) */
+export function formatCategory(value: string): string {
+  const v = value.trim()
+  if (v.length <= 3) return v.toUpperCase()
+  return v.toLowerCase().replace(/(^|\s)\S/g, (s) => s.toUpperCase())
+}
+
 export function parseSettings(raw: Raw | undefined): SiteSettings {
   const r = raw ?? {}
   return {

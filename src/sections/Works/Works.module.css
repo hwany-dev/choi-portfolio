@@ -1,0 +1,157 @@
+.works {
+  position: relative;
+}
+
+.content {
+  position: relative;
+  isolation: isolate;
+  align-content: start;
+  row-gap: var(--block-gap);
+  padding-top: var(--section-pad-top);
+  padding-bottom: var(--section-pad-bottom);
+}
+
+/* ── 카테고리 필터: 8컬럼에선 col2부터 탭 하나씩 컬럼 시작선에 ── */
+.filters {
+  --filter-cols: 7;
+  grid-column: var(--col-label) / -1;
+  display: grid;
+  grid-template-columns: repeat(var(--filter-cols), minmax(0, 1fr)); /* col2~col8 = 7 */
+  row-gap: 0.6em;
+  font-size: var(--fs-nav);
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+}
+
+.filter {
+  justify-self: start;
+  padding-bottom: 0.2em;
+  border-bottom: var(--hairline) solid transparent;
+  white-space: nowrap;
+  opacity: 0.5;
+  transition:
+    opacity 0.3s,
+    border-color 0.3s;
+}
+
+.filter:hover {
+  opacity: 0.8;
+}
+
+.filter[data-active='true'] {
+  opacity: 1;
+  border-bottom-color: currentColor;
+}
+
+@media (max-width: 1024px) {
+  .filters {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em 1.4em;
+  }
+}
+
+.message {
+  grid-column: var(--col-label) / -1;
+  font-size: var(--fs-caption);
+  color: var(--fg-dim);
+}
+
+/* ── masonry: 열 단위 flex, 원본 비율 ── */
+.masonry {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--masonry-gap);
+  transition-property: opacity;
+  transition-timing-function: var(--ease-out);
+}
+
+.masonry[data-fading='true'] {
+  opacity: 0;
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--masonry-gap);
+  will-change: transform;
+}
+
+.skeleton {
+  aspect-ratio: var(--img-fallback-ratio);
+  background: var(--placeholder);
+}
+
+/* ── 카드 ── */
+.card {
+  display: block;
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity 0.9s var(--ease-out) calc(var(--col, 0) * 0.08s),
+    transform 0.9s var(--ease-out) calc(var(--col, 0) * 0.08s);
+}
+
+.card[data-in='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+.thumbImg {
+  transition:
+    transform 0.8s var(--ease-out),
+    opacity 0.6s var(--ease-out);
+}
+
+.card:hover .thumbImg,
+.card:focus-visible .thumbImg {
+  transform: scale(1.03);
+}
+
+/* 캡션은 자리를 미리 잡아 두고(레이아웃 흔들림 없음) hover 때만 보임 */
+.caption {
+  display: block;
+  padding-top: 0.6em;
+  font-size: var(--fs-caption);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+}
+
+.card:hover .caption,
+.card:focus-visible .caption {
+  opacity: 1;
+  transform: none;
+}
+
+/* 터치 기기: 캡션 항상 표시 */
+@media (hover: none) {
+  .caption {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Load more (08 캡처: 우측 정렬, 큰 밑줄 텍스트) ── */
+.more {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--block-gap);
+}
+
+.moreButton {
+  font-size: var(--fs-h3);
+  letter-spacing: var(--ls-large);
+  line-height: var(--lh-large);
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.15em;
+}

@@ -139,7 +139,7 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 - 높이 `100svh`.
 
 ### 4-2. PROFILE (light)
-- 좌측 col2~col4: 사진 (`profileImage`), **흑백(`filter: grayscale(1)`) 기본, hover 시 컬러로 0.6s** — `10-team-photos.jpg` 톤.
+- 좌측 col2~col4: 사진 (`profileImage`), **흑백(`filter: grayscale(1)`) 고정, hover 컬러 전환 없음** (사이트 주인 결정) — `10-team-photos.jpg` 톤.
 - 우측 col5~col8: `profileName`(작게), `profileRole`(작게, dim), `profileBio`(`--fs-lead`, 단어 단위 opacity scrub).
 - 섹션 좌상단 소문구 라벨 `Profile` (13px).
 - 사진은 clip-path(아래→위) reveal.

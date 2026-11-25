@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from 'react'
 import styles from './Img.module.css'
 
 interface Props {
+  /** undefined = 아직 URL 조회 중(빈 skeleton) / null = 이미지 없음(대체 텍스트) */
   src: string | null | undefined
   alt: string
   /** CSS aspect-ratio. 생략하면 로드 전엔 --img-fallback-ratio, 로드 후엔 원본 비율 */
@@ -24,12 +25,17 @@ export default function Img({ src, alt, ratio, priority = false, className, imgC
   // src가 바뀌면 상태 리셋 (렌더 중 동기화)
   if (state.src !== src) setState({ src, status: 'loading' })
 
-  const failed = !src || state.status === 'error'
+  const pending = src === undefined
+  const failed = src === null || src === '' || state.status === 'error'
   const style: CSSProperties = { aspectRatio: ratio ?? state.natural ?? 'var(--img-fallback-ratio)' }
 
   return (
-    <div className={`${styles.frame} ${className ?? ''}`} style={style} data-status={failed ? 'error' : state.status}>
-      {failed ? (
+    <div
+      className={`${styles.frame} ${className ?? ''}`}
+      style={style}
+      data-status={pending ? 'loading' : failed ? 'error' : state.status}
+    >
+      {pending ? null : failed ? (
         <span className={styles.fallback}>{alt}</span>
       ) : (
         <img
