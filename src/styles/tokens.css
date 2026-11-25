@@ -48,6 +48,12 @@
   --dur-hover: 0.6s;
   --reveal-distance: 80px;
 
+  /* 섹션 전환 (§3-8) */
+  --transition-distance: 150svh; /* sticky 고정 동안 스크롤 거리 */
+  --bar-inset-x: 49.5%;          /* 시작 바 폭 ≈ 1% */
+  --bar-inset-y: 6%;
+  --plus-arm-ratio: 3;           /* + 팔 길이 / 팔 두께 */
+
   /* 고정 UI (difference blend — 흰색이어야 배경에 따라 반전된다) */
   --blend-fg: #fff;
   --invert-dot: 3px;

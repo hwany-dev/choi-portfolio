@@ -2,7 +2,15 @@ import type { ReactNode } from 'react'
 import { useSiteSettings, useWorks } from '../data/queries'
 import { buildCategories } from '../data/parse'
 import { useSectionRef } from '../hooks/useActiveSection'
-import { SECTIONS, type Section } from '../lib/sections'
+import { SECTIONS, type Section, type SectionId } from '../lib/sections'
+import BarExpandTransition from '../components/transitions/BarExpandTransition'
+import PlusExpandTransition from '../components/transitions/PlusExpandTransition'
+
+/** 섹션 시작부 전환 연출 (§3-8). 중앙 라벨은 하드코딩 허용 항목 */
+const INTROS: Partial<Record<SectionId, ReactNode>> = {
+  works: <BarExpandTransition lines={['Selected', 'Works']} />,
+  contact: <PlusExpandTransition />,
+}
 
 /**
  * 임시: 섹션 뼈대 + 연결 확인용.
@@ -11,17 +19,17 @@ import { SECTIONS, type Section } from '../lib/sections'
 function PlaceholderSection({ section, children }: { section: Section; children?: ReactNode }) {
   const ref = useSectionRef(section.id)
   return (
-    <section
-      id={section.id}
-      ref={ref}
-      data-theme={section.theme}
-      className="grid grid-lines"
-      style={{ minHeight: '100svh', alignContent: 'start', paddingBlock: 'var(--gutter)' }}
-    >
-      <p className="col-label" style={{ fontSize: 'var(--fs-caption)' }}>
-        {section.label}
-      </p>
-      <div className="col-content">{children}</div>
+    <section id={section.id} ref={ref} data-theme={section.theme}>
+      {INTROS[section.id]}
+      <div
+        className="grid grid-lines"
+        style={{ minHeight: '100svh', alignContent: 'start', paddingBlock: 'var(--gutter)' }}
+      >
+        <p className="col-label" style={{ fontSize: 'var(--fs-caption)' }}>
+          {section.label}
+        </p>
+        <div className="col-content">{children}</div>
+      </div>
     </section>
   )
 }
