@@ -1,8 +1,9 @@
+// global.css를 가장 먼저 — 컴포넌트 CSS Module이 유틸(.col-*)을 덮어쓸 수 있게
+import './styles/global.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
-import './styles/global.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {

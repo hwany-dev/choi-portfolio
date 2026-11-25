@@ -1,0 +1,117 @@
+/* 내비 (§3-6, 01·02 캡처)
+   + 심볼 col1, 탭 라벨은 컬럼 시작선. 라벨 아래 전폭 헤어라인 + 라벨 시작점 tick.
+   태블릿에서도 8컬럼 유지(라벨이 들어갈 폭이 됨), 모바일은 + / Menu 만. */
+.nav {
+  --nav-cols: 8;
+  --nav-line: var(--line-strong);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--nav-cols), minmax(0, 1fr));
+  align-items: center;
+  padding: var(--nav-pad-top) var(--gutter) var(--nav-pad-bottom);
+  font-size: var(--fs-nav);
+  font-weight: var(--fw-nav);
+  letter-spacing: var(--ls-base);
+  line-height: 1;
+}
+
+/* 전폭 헤어라인 */
+.nav::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--hairline);
+  background: var(--nav-line);
+}
+
+.nav[data-hidden='true'] {
+  visibility: hidden;
+}
+
+.fixed {
+  --nav-line: color-mix(in srgb, currentColor 20%, transparent);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  color: var(--blend-fg);
+  mix-blend-mode: difference;
+}
+
+.plus {
+  grid-row: 1;
+  grid-column: 1;
+  justify-self: start;
+  display: grid;
+  place-items: center;
+  width: var(--plus-size);
+  height: var(--plus-size);
+}
+
+.plus svg {
+  width: 100%;
+  height: 100%;
+}
+
+.item {
+  grid-row: 1;
+  justify-self: start;
+  position: relative;
+  white-space: nowrap;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.item[data-active='true'],
+.item:hover,
+.item:focus-visible {
+  opacity: 1;
+}
+
+/* 라벨 시작점 tick: 헤어라인에서 아래로 */
+.item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(100% + var(--nav-pad-bottom));
+  width: var(--hairline);
+  height: var(--nav-tick);
+  background: currentColor;
+}
+
+/* 스크롤 진행 라인 — scaleX 는 useNavProgress 가 갱신 */
+.progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--hairline);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+.menuButton {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    --nav-cols: 2;
+  }
+
+  .item {
+    display: none;
+  }
+
+  .menuButton {
+    display: block;
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+}

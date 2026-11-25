@@ -1,0 +1,35 @@
+.wordmark {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  margin-top: -0.08em; /* 상단이 살짝 잘려 화면 위에 붙은 느낌 */
+  font-family: var(--font-display);
+  font-stretch: var(--wordmark-stretch);
+  font-weight: var(--wordmark-weight);
+  font-size: 10vw; /* 측정 전 임시값 (data-ready 전엔 숨김) */
+  line-height: var(--lh-wordmark);
+  letter-spacing: 0;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.wordmark[data-ready='true'] {
+  visibility: visible;
+}
+
+/* 아래쪽만 잘라 글자가 아래에서 올라오게 */
+.mask {
+  display: block;
+  clip-path: inset(-50% -10% 0 -10%);
+}
+
+.letter {
+  display: block;
+  will-change: transform;
+}
+
+.space {
+  flex: none;
+  width: var(--wordmark-space);
+}

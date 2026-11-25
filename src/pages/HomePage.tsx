@@ -1,8 +1,11 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useSiteSettings, useWorks } from '../data/queries'
 import { buildCategories } from '../data/parse'
-import { useSectionRef } from '../hooks/useActiveSection'
-import { SECTIONS, type Section, type SectionId } from '../lib/sections'
+import { useActiveSection, useSectionRef } from '../hooks/useActiveSection'
+import { ScrollTrigger } from '../lib/lenis'
+import { scrollToSection } from '../lib/navigation'
+import { isSectionId, SECTIONS, type Section, type SectionId } from '../lib/sections'
+import Home from '../sections/Home/Home'
 import BarExpandTransition from '../components/transitions/BarExpandTransition'
 import PlusExpandTransition from '../components/transitions/PlusExpandTransition'
 
@@ -13,8 +16,8 @@ const INTROS: Partial<Record<SectionId, ReactNode>> = {
 }
 
 /**
- * 임시: 섹션 뼈대 + 연결 확인용.
- * 4단계부터 sections/(Home, Profile, Works, ProjectList, Contact)로 하나씩 교체된다.
+ * 임시: 섹션 뼈대. 5단계부터 sections/(Profile, Works, ProjectList, Contact)로 하나씩 교체된다.
+ * [data-anchor] = 내비 클릭 시 도착 지점 (전환 연출 뒤 콘텐츠 시작).
  */
 function PlaceholderSection({ section, children }: { section: Section; children?: ReactNode }) {
   const ref = useSectionRef(section.id)
@@ -22,8 +25,9 @@ function PlaceholderSection({ section, children }: { section: Section; children?
     <section id={section.id} ref={ref} data-theme={section.theme}>
       {INTROS[section.id]}
       <div
+        data-anchor
         className="grid grid-lines"
-        style={{ minHeight: '100svh', alignContent: 'start', paddingBlock: 'var(--gutter)' }}
+        style={{ minHeight: '100svh', alignContent: 'start', paddingBlock: 'calc(var(--nav-h, 0px) + var(--gutter))' }}
       >
         <p className="col-label" style={{ fontSize: 'var(--fs-caption)' }}>
           {section.label}
@@ -34,25 +38,39 @@ function PlaceholderSection({ section, children }: { section: Section; children?
   )
 }
 
+/** 진입 시 hash가 있으면 해당 섹션으로, 스크롤 중엔 현재 섹션으로 hash 갱신 */
+function useHashSync(ready: boolean) {
+  const [initialHash] = useState(() => window.location.hash.slice(1))
+  const [restored, setRestored] = useState(!isSectionId(initialHash))
+  const active = useActiveSection()
+
+  useEffect(() => {
+    if (restored || !ready || !isSectionId(initialHash)) return
+    const frame = requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+      scrollToSection(initialHash, true)
+      setRestored(true)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [ready, restored, initialHash])
+
+  useEffect(() => {
+    if (!restored || !active) return
+    const { pathname, search } = window.location
+    history.replaceState(history.state, '', active === 'home' ? pathname + search : `#${active}`)
+  }, [active, restored])
+}
+
 export default function HomePage() {
   const settings = useSiteSettings()
   const works = useWorks()
+  useHashSync(!settings.isPending && !works.isPending)
 
   return (
     <main>
-      {SECTIONS.map((section) => (
+      <Home />
+      {SECTIONS.filter((s) => s.id !== 'home').map((section) => (
         <PlaceholderSection key={section.id} section={section}>
-          {section.id === 'home' && (
-            <>
-              <h1 style={{ fontSize: 'var(--fs-lead-xl)', lineHeight: 'var(--lh-large)', whiteSpace: 'pre-line' }}>
-                {settings.data?.heroCopy}
-              </h1>
-              <p style={{ fontSize: 'var(--fs-caption)', marginTop: '1em' }}>
-                settings/site: {settings.isPending ? '…' : settings.isError ? 'error' : 'ok'} · works:{' '}
-                {works.isPending ? '…' : works.isError ? 'error' : works.data.length}
-              </p>
-            </>
-          )}
           {section.id === 'works' && works.data && (
             <p style={{ fontSize: 'var(--fs-caption)' }}>
               {buildCategories(works.data)

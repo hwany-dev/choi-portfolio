@@ -1,0 +1,90 @@
+.home {
+  position: relative;
+  isolation: isolate; /* GridLines(z -1)를 배경 위·콘텐츠 아래에 */
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+.wordmarkSkeleton {
+  height: var(--wordmark-skeleton-h);
+}
+
+.content {
+  flex: 1;
+  grid-template-rows: auto 1fr;
+  padding-top: var(--hero-content-pad);
+  padding-bottom: var(--gutter);
+}
+
+.tagline {
+  grid-row: 1;
+  font-size: var(--fs-caption);
+  line-height: 1.25;
+  white-space: pre-line;
+}
+
+.copy {
+  grid-row: 1;
+  font-size: var(--fs-lead-xl);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-base);
+  line-height: var(--lh-large);
+  white-space: pre-line;
+}
+
+/* 하단 스크롤 큐: 세로 헤어라인(위로 자람, 반복) + 문구 */
+.cue {
+  grid-row: 2;
+  align-self: end;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6em;
+  font-size: var(--fs-caption);
+  line-height: 1;
+}
+
+.cueLine {
+  width: var(--hairline);
+  height: var(--cue-line-h);
+  background: currentColor;
+  transform-origin: 50% 100%;
+  animation: cue-grow 2.4s var(--ease-out) infinite;
+}
+
+@keyframes cue-grow {
+  0% {
+    transform: scaleY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .tagline {
+    grid-row: 1;
+  }
+
+  .copy {
+    grid-row: 2;
+    margin-top: 1.5em;
+  }
+
+  /* 좌하단 invert color 와 겹치지 않게 2번째 컬럼 */
+  .cue {
+    grid-row: 3;
+    grid-column: 2 / -1;
+  }
+
+  .content {
+    grid-template-rows: auto auto 1fr;
+  }
+}

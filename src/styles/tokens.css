@@ -39,7 +39,18 @@
   --gutter: clamp(16px, 1.2vw, 24px);
   --masonry-gap: 16px;
   --hairline: 1px;
+
+  /* 내비 */
   --nav-tick: 6px;
+  --nav-pad-top: clamp(14px, 1.4vw, 24px);
+  --nav-pad-bottom: clamp(8px, 0.7vw, 12px);
+  --plus-size: clamp(12px, 1.1vw, 18px);
+
+  /* HOME */
+  --wordmark-space: 0.3em;           /* 워드마크 공백 = 글자 사이 추가 간격 */
+  --wordmark-skeleton-h: 22svh;      /* 데이터 로드 전 자리 확보 */
+  --hero-content-pad: clamp(48px, 9svh, 110px);
+  --cue-line-h: clamp(48px, 8svh, 90px);
 
   /* 모션 */
   --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1); /* ≈ GSAP power3.out */

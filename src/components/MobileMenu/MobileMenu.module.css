@@ -1,0 +1,67 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  display: none;
+  flex-direction: column;
+  padding: var(--nav-pad-top) var(--gutter) var(--gutter);
+  font-size: var(--fs-nav);
+  font-weight: var(--fw-nav);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s var(--ease-out),
+    visibility 0s 0.4s;
+}
+
+.overlay[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+@media (max-width: 768px) {
+  .overlay {
+    display: flex;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1;
+}
+
+.plus {
+  width: var(--plus-size);
+  height: var(--plus-size);
+}
+
+.plus svg {
+  width: 100%;
+  height: 100%;
+}
+
+.list {
+  margin-top: auto;
+  border-top: var(--hairline) solid var(--line-strong);
+}
+
+.list li {
+  border-bottom: var(--hairline) solid var(--line-strong);
+}
+
+.link {
+  display: block;
+  padding-block: 0.3em;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-large);
+  line-height: var(--lh-large);
+  opacity: 0.6;
+}
+
+.link[data-active='true'] {
+  opacity: 1;
+}
