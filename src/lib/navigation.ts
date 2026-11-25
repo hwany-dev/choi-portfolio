@@ -14,7 +14,7 @@ export function getNavHeight(): number {
 
 /**
  * 섹션으로 이동. 섹션 안에 [data-anchor]가 있으면 그 위치로
- * (전환 연출 뒤 실제 콘텐츠 시작점 — WORKS·CONTACT)
+ * (전환 연출 뒤 실제 콘텐츠 시작점 — WORKS·FOOTER)
  */
 export function scrollToSection(id: SectionId, immediate = false) {
   if (id === 'home') {

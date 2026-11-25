@@ -66,7 +66,7 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 ### 3-2. 컬러 & 테마
 - 팔레트는 2색: `--paper: #f0f0f0` (순백 아님), `--ink: #0e0e0e`.
 - 섹션마다 테마가 있다: `data-theme="light"`(bg paper / fg ink), `data-theme="dark"`(bg ink / fg paper).
-  - HOME, PROFILE = light / **WORKS, PROJECT LIST = dark** / CONTACT·푸터 = light
+  - HOME, PROFILE = light / **WORKS, PROJECT LIST = dark** / 푸터 = light
 - 보조색은 `color-mix()`로 파생 (dim 텍스트 40%, 헤어라인 6~12%).
 
 ### 3-3. INVERT COLOR (다크모드)
@@ -102,8 +102,8 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 ### 3-8. 섹션 전환 연출 (scrub, 핵심)
 1. **light → dark (PROFILE → WORKS)** — `03~06` 캡처
    - WORKS 섹션 시작부를 pin(약 100~150vh). 화면 중앙에 폭 ~1% 검은(ink) 세로 바 → 스크롤 진행에 따라 `scaleX`로 좌우 확장해 화면 전체를 덮음 → 중앙에 작은 2줄 라벨(`Selected` / `Works` 등, 13px) 등장 → 첫 줄 이미지들이 아래에서 올라오며 그리드 시작.
-2. **dark → light (PROJECT LIST → CONTACT)** — `11~12` 캡처
-   - 중앙에 paper색 `+` 십자 모양(`clip-path: polygon()` 또는 SVG mask)이 작게 나타나 scrub으로 커지면서 화면을 덮고, 덮은 뒤 CONTACT 콘텐츠가 나타남.
+2. **dark → light (PROJECT LIST → FOOTER)** — `11~12` 캡처
+   - 중앙에 paper색 `+` 십자 모양(`clip-path: polygon()` 또는 SVG mask)이 작게 나타나 scrub으로 커지면서 화면을 덮고, 덮은 뒤 푸터가 나타남.
 - 두 전환 모두 `prefers-reduced-motion`이면 단순 배경 전환으로 대체.
 
 ### 3-9. 텍스트 reveal
@@ -121,9 +121,9 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 #profile       PROFILE        light
 #works         WORKS          dark   (light→dark 바 확장 전환)
 #project-list  PROJECT LIST   dark
-#contact       CONTACT+FOOTER light  (dark→light + 전환)
+#footer        FOOTER         light  (dark→light + 전환)
 ```
-※ CONTACT는 탭에는 없지만 santalarch 푸터 구성을 따라 페이지 끝에 둔다.
+※ FOOTER는 탭에는 없지만 santalarch 푸터 구성을 따라 페이지 끝에 둔다. CONTACT 섹션은 없음(§4-6).
 
 ### 4-1. HOME (`01-hero.jpg`, `02`)
 - 최상단: **워드마크 "Eunji Choi"** (`settings/site.siteTitle`, `text-transform: uppercase`로 `EUNJI CHOI`).
@@ -177,10 +177,9 @@ urbanplay 상세 구조 + santalarch 스타일:
   - 클릭 → `/works/:id`.
 - mobile: 좌측 소문구는 리스트 위로, 행은 Title + `+`만.
 
-### 4-6. CONTACT + FOOTER (light) — `13`, `14`, `15`
+### 4-6. FOOTER (light) — `14`, `15`
+- **CONTACT 섹션(Let's Talk·이메일·연락처)은 만들지 않는다** (사이트 주인 결정, 2026-11-25). 페이지 끝은 푸터만.
 - 전환(§3-8 ②) 후 등장.
-- 좌측 col2: **`Let's Talk`** 큰 텍스트(`--fs-h2`) + 밑줄, 클릭 시 `mailto:{email}` (email 비면 Instagram 링크).
-- col5~: `email`(값 + 아래 13px dim 라벨 `Contact`), `Instagram`(링크 + 라벨) — 값이 빈 항목은 숨김.
 - 우측 col8: `Back to top ↑` (Lenis로 맨 위).
 - 맨 아래: **거대 워드마크 `EUNJI CHOI`** (HOME과 동일 스타일, 하단이 화면 밖으로 잘림). 페이지 끝에 도달하며 아래에서 올라오는 마스크 reveal(scrub).
 - 워드마크 위 작은 줄: `© {올해} Eunji Choi`.
@@ -229,7 +228,7 @@ urbanplay 상세 구조 + santalarch 스타일:
 | profileBio | string | 소개글 (줄바꿈 포함) |
 | profileImage | string | Storage 경로(`profile/profile.jpg`) **또는** 전체 URL |
 | instagramUrl | string | `https://www.instagram.com/ihaveachois/` |
-| email | string | 비면 CONTACT에서 숨김 |
+| email | string | 현재 미사용 (CONTACT 섹션 없음) |
 
 **`works/{id}`** (프로젝트 1개 = 문서 1개)
 
@@ -329,7 +328,7 @@ src/
     Nav/, MobileMenu/, Wordmark/, GridLines/, SectionLabel/, WordReveal/, LineReveal/, Img/
     transitions/       # BarExpandTransition, PlusExpandTransition
   sections/
-    Home/, Profile/, Works/, ProjectList/, Contact/
+    Home/, Profile/, Works/, ProjectList/, Footer/
   pages/
     HomePage.tsx, WorkDetailPage.tsx, NotFound.tsx
   styles/
@@ -392,7 +391,7 @@ VITE_FIREBASE_APP_ID=
 6. light→dark 바 확장 전환 + WORKS(필터, masonry, 열 패럴랙스, Load more, lazy 썸네일)
 7. 상세 페이지 + Prev/Next + 스크롤·필터 복원
 8. PROJECT LIST (sticky 소문구, 중앙 강조 리스트)
-9. dark→light `+` 전환 + CONTACT/푸터 워드마크 reveal
+9. dark→light `+` 전환 + 푸터 워드마크 reveal
 10. reduced-motion, 반응형 점검 (320 / 375 / 768 / 1024 / 1440 / 1920px), 12px 미만 텍스트 없는지, `docs/reference` 캡처와 나란히 비교
 11. 규칙·Hosting 배포, `docs/ADMIN_GUIDE.md`, README
 

@@ -1,0 +1,6 @@
+.label {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  line-height: 1.25;
+  white-space: pre-line;
+}

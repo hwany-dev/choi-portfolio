@@ -7,7 +7,7 @@ import styles from './transitions.module.css'
 const coverHalfThickness = () => `${Math.max(window.innerWidth, window.innerHeight) / 2 + 1}px`
 
 /**
- * dark → light 전환 (PROJECT LIST → CONTACT). 11~12 캡처.
+ * dark → light 전환 (PROJECT LIST → FOOTER). 11~12 캡처.
  * 중앙에 paper색 + 가 작게 나타나 스크롤에 맞춰 커지며 화면을 덮는다.
  * reduced-motion이면 렌더하지 않는다 → 단순 배경 전환.
  */

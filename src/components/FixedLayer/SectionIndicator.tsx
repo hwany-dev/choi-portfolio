@@ -4,7 +4,7 @@ import styles from './FixedLayer.module.css'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-/** 우하단 `{섹션명}  {현재} | {전체}` — 탭 섹션 밖(CONTACT, 상세 페이지)에서는 숨김 */
+/** 우하단 `{섹션명}  {현재} | {전체}` — 탭 섹션 밖(FOOTER, 상세 페이지)에서는 숨김 */
 export default function SectionIndicator() {
   const active = useActiveSection()
   const index = NAV_SECTIONS.findIndex((s) => s.id === active)

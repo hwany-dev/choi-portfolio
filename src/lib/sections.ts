@@ -4,7 +4,7 @@ export const SECTIONS = [
   { id: 'profile', label: 'Profile', theme: 'light', inNav: true },
   { id: 'works', label: 'Works', theme: 'dark', inNav: true },
   { id: 'project-list', label: 'Project List', theme: 'dark', inNav: true },
-  { id: 'contact', label: 'Contact', theme: 'light', inNav: false },
+  { id: 'footer', label: 'Footer', theme: 'light', inNav: false },
 ] as const
 
 export type Section = (typeof SECTIONS)[number]

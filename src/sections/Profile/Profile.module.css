@@ -1,0 +1,71 @@
+.profile {
+  position: relative;
+  isolation: isolate;
+  align-content: start;
+  row-gap: var(--block-gap);
+  min-height: 100svh;
+  padding-top: var(--section-pad-top);
+  padding-bottom: var(--section-pad-bottom);
+}
+
+.label {
+  grid-row: 1;
+}
+
+.photoCol {
+  grid-row: 2;
+  /* 사진 오른쪽 끝이 컬럼선에 붙지 않게 한 거터만큼 띄움 */
+  padding-right: var(--gutter);
+}
+
+.photoWrap {
+  /* 컬럼 폭을 채우되 세로가 화면을 넘지 않게 */
+  max-width: calc(var(--profile-max-h) * var(--profile-ratio));
+  will-change: clip-path;
+}
+
+/* 흑백 기본, hover 시 컬러 (10 캡처 톤) */
+.photo {
+  filter: grayscale(1);
+  transition:
+    filter var(--dur-hover) var(--ease-out),
+    opacity 0.6s var(--ease-out);
+}
+
+.photoWrap:hover .photo {
+  filter: grayscale(0);
+}
+
+.text {
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+}
+
+.meta {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+}
+
+.role {
+  color: var(--fg-dim);
+}
+
+.bio {
+  max-width: 34em;
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  letter-spacing: var(--ls-base);
+}
+
+@media (max-width: 768px) {
+  .photoCol {
+    padding-right: 0;
+  }
+
+  .text {
+    grid-row: 3;
+  }
+}
