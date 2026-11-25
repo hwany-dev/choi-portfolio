@@ -51,7 +51,7 @@ export default function Home() {
   }, [ready, reduced])
 
   return (
-    <section id="home" ref={sectionRef} data-theme="light" className={styles.home}>
+    <section id="home" ref={sectionRef} className={styles.home}>
       <GridLines diagonal />
 
       {settings?.siteTitle ? (

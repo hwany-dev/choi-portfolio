@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, type MouseEvent } from 'react'
-import { useSiteSettings } from '../../data/queries'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { ScrollTrigger } from '../../lib/lenis'
 import { menuOpen, navPinned } from '../../lib/navigation'
@@ -28,7 +27,6 @@ export default function Nav({ variant }: Props) {
   const active = useActiveSection()
   const pinned = navPinned.useValue()
   const open = menuOpen.useValue()
-  const { data: settings } = useSiteSettings()
   const goTo = useGoToSection()
 
   // inline 내비가 화면 상단에 닿으면 pinned → 고정 내비로 교체
@@ -87,18 +85,6 @@ export default function Nav({ variant }: Props) {
           {s.label}
         </a>
       ))}
-
-      {settings?.instagramUrl && (
-        <a
-          href={settings.instagramUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.item}
-          style={{ gridColumnStart: 'var(--col-nav-instagram)' }}
-        >
-          Instagram ↗
-        </a>
-      )}
 
       <button
         type="button"

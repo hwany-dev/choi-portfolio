@@ -66,7 +66,7 @@ export default function Profile() {
   const photo = resolveImage(settings?.profileImage)
 
   return (
-    <section id="profile" ref={sectionRef} data-theme="light" className={`grid ${styles.profile}`}>
+    <section id="profile" ref={sectionRef} className={`grid ${styles.profile}`}>
       <GridLines />
       <SectionLabel className={styles.label}>Profile</SectionLabel>
 
@@ -79,13 +79,24 @@ export default function Profile() {
       </div>
 
       <div className={`col-content ${styles.text}`}>
-        {(name || settings?.profileRole) && (
+        {(name || settings?.profileRole || settings?.instagramUrl) && (
           <div className={styles.meta}>
             {name && <p data-meta>{name}</p>}
             {settings?.profileRole && (
               <p data-meta className={styles.role}>
                 {settings.profileRole}
               </p>
+            )}
+            {settings?.instagramUrl && (
+              <a
+                data-meta
+                href={settings.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.instagram}
+              >
+                Instagram ↗
+              </a>
             )}
           </div>
         )}

@@ -8,7 +8,6 @@ import { gsap, scrollToTarget } from '../../lib/lenis'
 import { useLocation } from 'react-router'
 import { getNavHeight } from '../../lib/navigation'
 import { saveWorksReturn, worksView } from '../../lib/worksReturn'
-import BarExpandTransition from '../../components/transitions/BarExpandTransition'
 import GridLines from '../../components/GridLines/GridLines'
 import WorkCard from './WorkCard'
 import styles from './Works.module.css'
@@ -119,18 +118,15 @@ export default function Works({ initial }: Props) {
     [location.key, shownFilter, count],
   )
 
-  const total = works?.length ?? 0
-
   return (
-    <section id="works" ref={sectionRef} data-theme="dark" className={styles.works}>
-      <BarExpandTransition lines={['Selected', 'Works']} />
+    <section id="works" ref={sectionRef} className={styles.works}>
 
       <div data-anchor className={`grid ${styles.content}`}>
         <GridLines />
 
         {works && (
           <div ref={filtersRef} className={styles.filters} role="toolbar" aria-label="Category filter">
-            {[{ key: ALL, label: 'All', count: total }, ...categories].map((c) => (
+            {[{ key: ALL, label: 'All' }, ...categories].map((c) => (
               <button
                 key={c.key}
                 type="button"
@@ -139,7 +135,7 @@ export default function Works({ initial }: Props) {
                 aria-pressed={filter === c.key}
                 onClick={() => selectFilter(c.key)}
               >
-                {c.key === ALL ? c.label : formatCategory(c.label)} ({c.count})
+                {c.key === ALL ? c.label : formatCategory(c.label)}
               </button>
             ))}
           </div>

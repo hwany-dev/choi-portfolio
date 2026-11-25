@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useSiteSettings } from '../../data/queries'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { startScroll, stopScroll } from '../../lib/lenis'
 import { menuOpen } from '../../lib/navigation'
@@ -12,7 +11,6 @@ import styles from './MobileMenu.module.css'
 export default function MobileMenu() {
   const open = menuOpen.useValue()
   const active = useActiveSection()
-  const { data: settings } = useSiteSettings()
   const goTo = useGoToSection()
   const closeRef = useRef<HTMLButtonElement>(null)
 
@@ -74,13 +72,6 @@ export default function MobileMenu() {
             </a>
           </li>
         ))}
-        {settings?.instagramUrl && (
-          <li>
-            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>
-              Instagram ↗
-            </a>
-          </li>
-        )}
       </ul>
     </div>
   )

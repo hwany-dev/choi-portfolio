@@ -5,11 +5,10 @@ import { usePrefersReducedMotion } from '../../hooks/useMediaQuery'
 import { gsap, ScrollTrigger } from '../../lib/lenis'
 import { scrollToSection } from '../../lib/navigation'
 import GridLines from '../../components/GridLines/GridLines'
-import PlusExpandTransition from '../../components/transitions/PlusExpandTransition'
 import Wordmark from '../../components/Wordmark/Wordmark'
 import styles from './Footer.module.css'
 
-/** FOOTER (§4-6, 14·15 캡처): + 전환 → © 줄 + Back to top → 하단이 잘린 거대 워드마크 (scrub reveal) */
+/** FOOTER (§4-6, 14·15 캡처): © 줄 + Back to top → 하단이 잘린 거대 워드마크 (scrub reveal) */
 export default function Footer() {
   const { data: settings } = useSiteSettings()
   const reduced = usePrefersReducedMotion()
@@ -45,9 +44,7 @@ export default function Footer() {
   const toTop = useCallback(() => scrollToSection('home'), [])
 
   return (
-    <footer id="footer" ref={sectionRef} data-theme="light" className={styles.footer}>
-      <PlusExpandTransition />
-
+    <footer id="footer" ref={sectionRef} className={styles.footer}>
       <div data-anchor className={styles.content}>
         <GridLines />
 

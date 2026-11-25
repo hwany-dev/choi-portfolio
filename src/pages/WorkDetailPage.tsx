@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { useSiteSettings, useWorkImages, useWorks } from '../data/queries'
 import type { Work } from '../data/types'
 import { useInView } from '../hooks/useInView'
+import { usePageTheme } from '../hooks/usePageTheme'
 import { scrollToTarget } from '../lib/lenis'
 import { navPinned } from '../lib/navigation'
 import { readWorksReturn, type ReturnState } from '../lib/worksReturn'
@@ -66,6 +67,8 @@ export default function WorkDetailPage() {
     scrollToTarget(0, { immediate: true })
   }, [id])
 
+  usePageTheme('light')
+
   // 상세엔 문서 흐름 내비가 없으므로 고정 내비를 처음부터 표시
   useEffect(() => {
     navPinned.set(true)
@@ -88,7 +91,7 @@ export default function WorkDetailPage() {
 
   if (works.isError) {
     return (
-      <main data-theme="light" className={`grid ${styles.state}`}>
+      <main className={`grid ${styles.state}`}>
         <p className="col-content">프로젝트를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.</p>
       </main>
     )
@@ -96,7 +99,7 @@ export default function WorkDetailPage() {
 
   if (!works.isPending && !work) {
     return (
-      <main data-theme="light" className={`grid ${styles.state}`}>
+      <main className={`grid ${styles.state}`}>
         <div className="col-content">
           <h1 className={styles.notFound}>Project not found</h1>
           <Link to="/#works" className={styles.link}>
@@ -114,7 +117,7 @@ export default function WorkDetailPage() {
   const paired = pairLandscapes(details, known)
 
   return (
-    <main data-theme="light" className={styles.page}>
+    <main className={styles.page}>
       {/* 1. 메인 이미지 */}
       <Img
         src={work ? cover : undefined}

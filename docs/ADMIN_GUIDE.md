@@ -138,7 +138,7 @@ Firestore → `settings` → `site` 문서에서 값만 바꾸면 됩니다.
 | `profileRole` | 프로필 직함 |
 | `profileBio` | 프로필 소개글. 문단 나누기는 `\n` |
 | `profileImage` | `profile/profile.jpg` 그대로 두기 (사진은 Storage에서 교체) |
-| `instagramUrl` | 상단 메뉴의 `Instagram ↗` 링크 |
+| `instagramUrl` | 프로필 소개 위의 `Instagram ↗` 링크 (비우면 숨김) |
 | `email` | 현재 사이트에 표시되지 않음 |
 
 - **프로필 사진 교체**: Storage → `profile` 폴더 → 기존 `profile.jpg` 삭제 → 새 사진을 `profile.jpg` 이름으로 업로드.

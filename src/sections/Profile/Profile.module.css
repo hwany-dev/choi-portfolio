@@ -46,6 +46,14 @@
   color: var(--fg-dim);
 }
 
+.instagram {
+  display: inline-block;
+  margin-top: 0.8em;
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.25em;
+}
+
 .bio {
   max-width: 34em;
   font-size: var(--fs-lead);

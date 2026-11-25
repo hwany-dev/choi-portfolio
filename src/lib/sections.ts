@@ -4,7 +4,8 @@ export const SECTIONS = [
   { id: 'profile', label: 'Profile', theme: 'light', inNav: true },
   { id: 'works', label: 'Works', theme: 'dark', inNav: true },
   { id: 'project-list', label: 'Project List', theme: 'dark', inNav: true },
-  { id: 'footer', label: 'Footer', theme: 'light', inNav: false },
+  // 푸터는 PROJECT LIST와 같은 어두운 테마로 이어진다 (끝에서 다시 밝아지지 않음)
+  { id: 'footer', label: 'Footer', theme: 'dark', inNav: false },
 ] as const
 
 export type Section = (typeof SECTIONS)[number]

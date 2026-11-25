@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
-  margin-top: -0.08em; /* 상단이 살짝 잘려 화면 위에 붙은 느낌 */
+  margin-top: var(--wordmark-offset-top); /* 음수면 상단이 화면 위로 잘림 */
   font-family: var(--font-display);
   font-stretch: var(--wordmark-stretch);
   font-weight: var(--wordmark-weight);

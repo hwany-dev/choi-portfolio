@@ -16,8 +16,7 @@ body {
   letter-spacing: var(--ls-base);
   word-break: keep-all;
   overflow-wrap: anywhere;
-  background-color: var(--bg);
-  color: var(--fg);
+  /* 배경·글자색은 html[data-theme]가 그리고 전환한다 (body가 덮으면 전환이 안 보임) */
 }
 
 :focus-visible {

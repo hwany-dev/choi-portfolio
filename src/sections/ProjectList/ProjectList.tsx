@@ -100,7 +100,7 @@ export default function ProjectList() {
   )
 
   return (
-    <section id="project-list" ref={sectionRef} data-theme="dark" className={`grid ${styles.section}`} data-anchor>
+    <section id="project-list" ref={sectionRef} className={`grid ${styles.section}`} data-anchor>
       <GridLines />
 
       <div className={styles.aside}>

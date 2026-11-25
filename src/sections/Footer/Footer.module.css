@@ -2,14 +2,13 @@
   position: relative;
 }
 
-/* 마지막 한 화면: 위는 비우고, 아래에 정보 줄 + 거대 워드마크 */
+/* 내용 높이만큼: 정보 줄 + 거대 워드마크 */
 .content {
   position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-height: 100svh;
+  padding-top: var(--footer-pad-top);
   overflow: clip; /* 워드마크 하단이 화면(페이지) 밖으로 잘리게 */
 }
 

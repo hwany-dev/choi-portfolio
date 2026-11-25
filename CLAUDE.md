@@ -65,8 +65,8 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 
 ### 3-2. 컬러 & 테마
 - 팔레트는 2색: `--paper: #f0f0f0` (순백 아님), `--ink: #0e0e0e`.
-- 섹션마다 테마가 있다: `data-theme="light"`(bg paper / fg ink), `data-theme="dark"`(bg ink / fg paper).
-  - HOME, PROFILE = light / **WORKS, PROJECT LIST = dark** / 푸터 = light
+- 섹션마다 테마가 있다: light(bg paper / fg ink), dark(bg ink / fg paper). 테마는 **페이지 전체(`html[data-theme]`) 하나**로 적용되고, 현재 섹션(화면 가운데를 지나는 섹션)에 따라 바뀐다 (§3-8).
+  - HOME, PROFILE = light / **WORKS, PROJECT LIST, 푸터 = dark** / 상세 페이지 = light
 - 보조색은 `color-mix()`로 파생 (dim 텍스트 40%, 헤어라인 6~12%).
 
 ### 3-3. INVERT COLOR (다크모드)
@@ -74,7 +74,7 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 - 동작: `html[data-inverted]`에서 `--paper` ↔ `--ink` 값을 맞바꾼다 → 모든 섹션 테마가 함께 뒤집힘(light 섹션은 어두워지고 dark 섹션은 밝아짐). 사진은 그대로.
   - `filter: invert()`는 쓰지 않는다.
 - `localStorage` 저장, 초기값은 `prefers-color-scheme: dark`면 inverted. **FOUC 방지**: `index.html` `<head>` 인라인 스크립트에서 먼저 세팅. `<meta name="theme-color">` 갱신.
-- 전환: `background-color, color` 0.5s.
+- 전환: `background-color, color` 0.8s (`--dur-theme`, 섹션 테마 전환과 같은 값).
 
 ### 3-4. 고정 UI 레이어 (`mix-blend-mode: difference`)
 아래 요소들은 `color: #fff; mix-blend-mode: difference;`로 **어떤 배경(라이트/다크/사진) 위에서도 자동 반전**되게 한다 (`07`, `13` 캡처에서 내비가 영역별로 흑/백 반전되는 것 확인).
@@ -88,23 +88,22 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 
 ### 3-6. 내비게이션 (`01`, `02` 참고)
 - 구조: 좌측 `+` 심볼(굵은 십자 아이콘, 클릭 = 맨 위로) + 탭 라벨들. 각 라벨은 **컬럼 시작선에 위치**하고, 라벨 아래 헤어라인 가로줄 + 라벨 시작점에 짧은 세로 tick.
-- 탭 배치(8컬럼 기준): `+` col1 / HOME col2 / PROFILE col4 / WORKS col6 / PROJECT LIST col7 / INSTAGRAM↗ col8 — 실제 화면 보고 균형 조정 가능.
+- 탭 배치(8컬럼 기준): `+` col1 / HOME col2 / PROFILE col4 / WORKS col6 / PROJECT LIST col8.
 - **스크롤 진행 라인**: 헤어라인 위에 ink색 실선이 왼쪽 끝부터 **현재 스크롤 위치에 해당하는 탭의 tick까지** 늘어난다(scrub). 섹션 경계마다 다음 tick까지 이어서 증가. (`03`, `09`, `14` 캡처에서 라인이 점점 길어지는 것 확인)
 - HOME 첫 화면에서 내비는 **워드마크 바로 아래 문서 흐름 안**에 있다가, 스크롤로 상단에 닿으면 `position: sticky; top: 0`으로 고정.
 - 클릭 → `lenis.scrollTo('#works', { offset: -navHeight, duration: 1.2 })`. 진행 중 hash `history.replaceState` 갱신, 진입 시 hash 있으면 해당 섹션으로.
 - 현재 섹션 탭은 라벨 opacity 1, 나머지 0.6.
-- **INSTAGRAM은 섹션이 아니라 외부 링크** (`settings/site.instagramUrl`, 새 탭, `↗`). 진행 라인 대상 아님.
+- **Instagram 링크는 내비에 두지 않는다** — PROFILE 섹션 이름·직함 아래에 둔다 (사이트 주인 결정, §4-2).
 - mobile(≤768): `+` 와 `Menu`만 표시 → 풀스크린 오버레이에 탭 크게 나열, 열려 있는 동안 Lenis stop, `Esc` 닫기.
 
 ### 3-7. 우하단 섹션 인디케이터
 - santalarch 우하단 `Resolution 04 | 04` 처럼, 고정 소문구로 `{섹션명}  {현재} | {전체}` 표시 (예: `Works  03 | 04`). difference blend. mobile 숨김.
 
-### 3-8. 섹션 전환 연출 (scrub, 핵심)
-1. **light → dark (PROFILE → WORKS)** — `03~06` 캡처
-   - WORKS 섹션 시작부를 pin(약 100~150vh). 화면 중앙에 폭 ~1% 검은(ink) 세로 바 → 스크롤 진행에 따라 `scaleX`로 좌우 확장해 화면 전체를 덮음 → 중앙에 작은 2줄 라벨(`Selected` / `Works` 등, 13px) 등장 → 첫 줄 이미지들이 아래에서 올라오며 그리드 시작.
-2. **dark → light (PROJECT LIST → FOOTER)** — `11~12` 캡처
-   - 중앙에 paper색 `+` 십자 모양(`clip-path: polygon()` 또는 SVG mask)이 작게 나타나 scrub으로 커지면서 화면을 덮고, 덮은 뒤 푸터가 나타남.
-- 두 전환 모두 `prefers-reduced-motion`이면 단순 배경 전환으로 대체.
+### 3-8. 섹션 전환 — 페이지 테마 크로스페이드
+- **santalarch의 바 확장·`+` 전환은 쓰지 않는다** (사이트 주인 결정, 2026-11-25). 멈추거나(pin) 화면을 덮는 연출 없음.
+- 섹션 경계가 화면 세로 가운데를 지나면 `html[data-theme]`가 그 섹션 테마로 바뀌고, 배경·글자색이 `--dur-theme`(0.8s, `--ease-out`) 동안 부드럽게 전환된다 (`usePageTheme` + `useActiveSection`).
+- 섹션 요소에는 `data-theme`를 두지 않는다 (배경을 칠하면 페이지 전환이 가려짐). 예외: 모바일 메뉴 오버레이.
+- `prefers-reduced-motion`이면 즉시 전환.
 
 ### 3-9. 텍스트 reveal
 - 섹션 소문구·설명: **단어 단위 opacity scrub** (0.15 → 1), 읽는 위치에 맞춰 왼→오 순서로 밝아짐 (`09`의 좌측 소문구).
@@ -119,9 +118,9 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 ```
 #home          HOME           light
 #profile       PROFILE        light
-#works         WORKS          dark   (light→dark 바 확장 전환)
+#works         WORKS          dark
 #project-list  PROJECT LIST   dark
-#footer        FOOTER         light  (dark→light + 전환)
+#footer        FOOTER         dark   (짧은 푸터, 내용 높이만큼)
 ```
 ※ FOOTER는 탭에는 없지만 santalarch 푸터 구성을 따라 페이지 끝에 둔다. CONTACT 섹션은 없음(§4-6).
 
@@ -140,12 +139,12 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 
 ### 4-2. PROFILE (light)
 - 좌측 col2~col4: 사진 (`profileImage`), **흑백(`filter: grayscale(1)`) 고정, hover 컬러 전환 없음** (사이트 주인 결정) — `10-team-photos.jpg` 톤.
-- 우측 col5~col8: `profileName`(작게), `profileRole`(작게, dim), `profileBio`(`--fs-lead`, 단어 단위 opacity scrub).
+- 우측 col5~col8: `profileName`(작게), `profileRole`(작게, dim), `Instagram ↗`(`instagramUrl`, 밑줄, 새 탭, 비면 숨김), `profileBio`(`--fs-lead`, 단어 단위 opacity scrub).
 - 섹션 좌상단 소문구 라벨 `Profile` (13px).
 - 사진은 clip-path(아래→위) reveal.
 
 ### 4-3. WORKS (dark) — `05~08` 참고
-- 전환(§3-8 ①) 끝에 중앙 라벨 → 상단에 **카테고리 필터 탭** 한 줄: `All (65)  BTL (11)  Exhibition (23) …` (13~15px, 컬럼 정렬, 활성 탭만 opacity 1 + 밑줄).
+- 상단에 **카테고리 필터 탭** 한 줄: `All  BTL  Exhibition …` — **개수 표시 없음** (사이트 주인 결정) (13~15px, 컬럼 정렬, 활성 탭만 opacity 1 + 밑줄).
   - **카테고리 목록은 데이터에서 유니크 값 추출.** 정렬 순서 상수 `['BTL','EXHIBITION','SPACE','POP UP','PERFORMANCE','COMMUNITY']`, 그 외 새 값은 뒤에. 비교는 `trim().toUpperCase()`.
   - 필터 변경 시 그리드 fade-out → 재배치 → fade-in.
 - **그리드: desktop 3열 masonry, 거터 16px, 이미지 원본 비율 유지** (`07` 캡처처럼 열 너비 꽉 채움). ≤1024 2열, ≤480 1열.
@@ -179,7 +178,7 @@ urbanplay 상세 구조 + santalarch 스타일:
 
 ### 4-6. FOOTER (light) — `14`, `15`
 - **CONTACT 섹션(Let's Talk·이메일·연락처)은 만들지 않는다** (사이트 주인 결정, 2026-11-25). 페이지 끝은 푸터만.
-- 전환(§3-8 ②) 후 등장.
+- PROJECT LIST 바로 아래 이어지는 **내용 높이만큼의 짧은 푸터** (화면 한 장을 쓰지 않음, 사이트 주인 결정).
 - 우측 col8: `Back to top ↑` (Lenis로 맨 위).
 - 맨 아래: **거대 워드마크 `EUNJI CHOI`** (HOME과 동일 스타일, 하단이 화면 밖으로 잘림). 페이지 끝에 도달하며 아래에서 올라오는 마스크 reveal(scrub).
 - 워드마크 위 작은 줄: `© {올해} Eunji Choi`.
@@ -227,7 +226,7 @@ urbanplay 상세 구조 + santalarch 스타일:
 | profileRole | string | `기획자·Brand Experience(BX) Strategist` |
 | profileBio | string | 소개글 (줄바꿈 포함) |
 | profileImage | string | Storage 경로(`profile/profile.jpg`) **또는** 전체 URL |
-| instagramUrl | string | `https://www.instagram.com/ihaveachois/` |
+| instagramUrl | string | `https://www.instagram.com/ihaveachois/` — PROFILE의 `Instagram ↗` 링크 (비면 숨김) |
 | email | string | 현재 미사용 (CONTACT 섹션 없음) |
 
 **`works/{id}`** (프로젝트 1개 = 문서 1개)
@@ -357,7 +356,7 @@ VITE_FIREBASE_APP_ID=
 
 ## 9. 품질 기준
 
-- 모션은 조용하게: reveal 거리 40~100px, 0.8~1.0s, `power3.out`. 전환 연출(§3-8) 외 과한 패럴랙스 금지.
+- 모션은 조용하게: reveal 거리 40~100px, 0.8~1.0s, `power3.out`. 과한 패럴랙스 금지.
 - ScrollTrigger는 `gsap.context()` + cleanup으로 언마운트 시 kill. Lenis ↔ ScrollTrigger 연동(`lenis.on('scroll', ScrollTrigger.update)`, `gsap.ticker.add`). 데이터 로드 후 이미지 로딩 완료 시 `ScrollTrigger.refresh()` (masonry 높이 변화 대응).
 - `prefers-reduced-motion: reduce` → Lenis off, 전환·reveal 즉시.
 - 로딩: 섹션별 skeleton, 실패 시 조용한 에러 문구 (전체 흰 화면 금지).
