@@ -61,6 +61,10 @@
   --list-row-pad: clamp(16px, 2.4svh, 32px);
   --list-plus-size: clamp(14px, 1.2vw, 20px);
 
+  /* FOOTER */
+  --footer-info-gap: clamp(20px, 4svh, 48px);
+  --footer-wordmark-crop: 22%;   /* 워드마크 높이 중 화면 밖으로 잘리는 비율 */
+
   /* PROFILE */
   --profile-ratio: 4 / 5;
   --profile-max-h: 72svh;

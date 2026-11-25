@@ -32,16 +32,19 @@ export default function Nav({ variant }: Props) {
   const goTo = useGoToSection()
 
   // inline 내비가 화면 상단에 닿으면 pinned → 고정 내비로 교체
+  // (isActive는 페이지 맨 끝(end)에 닿으면 false가 되므로 progress로 판정)
   useLayoutEffect(() => {
     const el = ref.current
     if (isFixed || !el) return
+    const sync = (self: ScrollTrigger) => navPinned.set(self.progress > 0)
     const trigger = ScrollTrigger.create({
       trigger: el,
       start: 'top top',
       end: 'max',
-      onToggle: (self) => navPinned.set(self.isActive),
+      onUpdate: sync,
+      onRefresh: sync,
     })
-    navPinned.set(trigger.isActive)
+    sync(trigger)
     return () => {
       trigger.kill()
       navPinned.set(false)
