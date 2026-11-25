@@ -1,0 +1,105 @@
+/* 고정 UI 레이어 (CLAUDE.md §3-4)
+   각 요소가 body 직속 + 자기 자신에 position:fixed / mix-blend-mode:difference.
+   공통 래퍼로 감싸면 래퍼가 stacking context가 되어 blend가 먹지 않는다. */
+.blend {
+  position: fixed;
+  color: var(--blend-fg);
+  mix-blend-mode: difference;
+  z-index: var(--z-fixed);
+  font-size: var(--fs-caption);
+  line-height: 1;
+}
+
+/* ── invert color ───────────────────────── */
+.invert {
+  composes: blend;
+  left: var(--gutter);
+  bottom: var(--gutter);
+  display: inline-flex;
+  align-items: baseline;
+  padding-bottom: 0.25em;
+  border-bottom: var(--hairline) solid currentColor;
+  text-transform: lowercase;
+  cursor: pointer;
+}
+
+/* dotless ı 위에 원형 dot */
+.invertI {
+  position: relative;
+}
+
+.invertDot {
+  position: absolute;
+  left: 50%;
+  top: -0.32em;
+  width: var(--invert-dot);
+  height: var(--invert-dot);
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateX(-50%);
+}
+
+/* ── section indicator ──────────────────── */
+.indicator {
+  composes: blend;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  font-weight: var(--fw-medium);
+  pointer-events: none;
+  transition: opacity var(--dur-theme);
+}
+
+.indicator[data-hidden='true'] {
+  opacity: 0;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.sep {
+  width: var(--hairline);
+  height: 1.1em;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .indicator {
+    display: none;
+  }
+}
+
+/* ── cursor ─────────────────────────────── */
+.cursor {
+  composes: blend;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  will-change: transform;
+}
+
+.cursor[data-visible='true'] {
+  opacity: 1;
+}
+
+.cursorDot {
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  margin: calc(var(--cursor-size) / -2) 0 0 calc(var(--cursor-size) / -2);
+  border-radius: 50%;
+  background: currentColor;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.cursor[data-hover='true'] .cursorDot {
+  transform: scale(calc(var(--cursor-size-hover) / var(--cursor-size)));
+}

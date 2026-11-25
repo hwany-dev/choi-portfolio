@@ -32,6 +32,7 @@
   --lh-large: 1.1;
   --lh-body: 1.5;
   --fw-regular: 400;
+  --fw-medium: 500;
   --fw-nav: 600;
 
   /* 레이아웃 */
@@ -46,6 +47,10 @@
   --dur-reveal: 0.9s;
   --dur-hover: 0.6s;
   --reveal-distance: 80px;
+
+  /* 고정 UI (difference blend — 흰색이어야 배경에 따라 반전된다) */
+  --blend-fg: #fff;
+  --invert-dot: 3px;
 
   /* 커서 */
   --cursor-size: 10px;

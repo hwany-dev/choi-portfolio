@@ -1,37 +1,59 @@
+import type { ReactNode } from 'react'
 import { useSiteSettings, useWorks } from '../data/queries'
 import { buildCategories } from '../data/parse'
-import { useTheme } from '../hooks/useTheme'
+import { useSectionRef } from '../hooks/useActiveSection'
+import { SECTIONS, type Section } from '../lib/sections'
 
 /**
- * 임시: 1~2단계 연결 확인용 화면.
- * 4단계부터 sections/(Home, Profile, Works, ProjectList, Contact)로 교체된다.
+ * 임시: 섹션 뼈대 + 연결 확인용.
+ * 4단계부터 sections/(Home, Profile, Works, ProjectList, Contact)로 하나씩 교체된다.
  */
+function PlaceholderSection({ section, children }: { section: Section; children?: ReactNode }) {
+  const ref = useSectionRef(section.id)
+  return (
+    <section
+      id={section.id}
+      ref={ref}
+      data-theme={section.theme}
+      className="grid grid-lines"
+      style={{ minHeight: '100svh', alignContent: 'start', paddingBlock: 'var(--gutter)' }}
+    >
+      <p className="col-label" style={{ fontSize: 'var(--fs-caption)' }}>
+        {section.label}
+      </p>
+      <div className="col-content">{children}</div>
+    </section>
+  )
+}
+
 export default function HomePage() {
   const settings = useSiteSettings()
   const works = useWorks()
-  const { inverted, toggle } = useTheme()
 
   return (
-    <main data-theme="light" className="grid grid-lines" style={{ minHeight: '100svh', alignContent: 'start' }}>
-      <div className="col-label" style={{ paddingBlock: 'var(--gutter)', fontSize: 'var(--fs-caption)' }}>
-        <p>settings/site: {settings.isPending ? '…' : settings.isError ? 'error' : 'ok'}</p>
-        <p>works: {works.isPending ? '…' : works.isError ? 'error' : works.data.length}</p>
-        <button type="button" onClick={toggle} style={{ textDecoration: 'underline' }}>
-          invert color ({inverted ? 'on' : 'off'})
-        </button>
-      </div>
-      <div className="col-content" style={{ paddingBlock: 'var(--gutter)' }}>
-        <h1 style={{ fontSize: 'var(--fs-lead-xl)', lineHeight: 'var(--lh-large)', whiteSpace: 'pre-line' }}>
-          {settings.data?.heroCopy}
-        </h1>
-        {works.data && (
-          <p style={{ fontSize: 'var(--fs-caption)', marginTop: '1em' }}>
-            {buildCategories(works.data)
-              .map((c) => `${c.label} (${c.count})`)
-              .join('  ')}
-          </p>
-        )}
-      </div>
+    <main>
+      {SECTIONS.map((section) => (
+        <PlaceholderSection key={section.id} section={section}>
+          {section.id === 'home' && (
+            <>
+              <h1 style={{ fontSize: 'var(--fs-lead-xl)', lineHeight: 'var(--lh-large)', whiteSpace: 'pre-line' }}>
+                {settings.data?.heroCopy}
+              </h1>
+              <p style={{ fontSize: 'var(--fs-caption)', marginTop: '1em' }}>
+                settings/site: {settings.isPending ? '…' : settings.isError ? 'error' : 'ok'} · works:{' '}
+                {works.isPending ? '…' : works.isError ? 'error' : works.data.length}
+              </p>
+            </>
+          )}
+          {section.id === 'works' && works.data && (
+            <p style={{ fontSize: 'var(--fs-caption)' }}>
+              {buildCategories(works.data)
+                .map((c) => `${c.label} (${c.count})`)
+                .join('  ')}
+            </p>
+          )}
+        </PlaceholderSection>
+      ))}
     </main>
   )
 }
