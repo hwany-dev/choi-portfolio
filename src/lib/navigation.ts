@@ -23,6 +23,7 @@ export function scrollToSection(id: SectionId, immediate = false) {
   }
   const section = document.getElementById(id)
   if (!section) return
+  // 섹션 상단 여백(--section-pad-top)에 이미 내비 높이가 포함돼 있으므로 오프셋 없이 시작점에 맞춘다
   const target = section.querySelector<HTMLElement>('[data-anchor]') ?? section
-  scrollToTarget(target, { offset: -getNavHeight(), immediate })
+  scrollToTarget(target, { immediate })
 }
