@@ -17,12 +17,12 @@ const DEFAULT_TITLE = document.title
 
 /** 메타 행 — 순서 고정, 라벨은 하드코딩 허용 항목. 값이 빈 행은 숨김 */
 const META_FIELDS: { label: string; key: keyof Work }[] = [
-  { label: 'Client', key: 'client' },
   { label: 'Date', key: 'date' },
+  { label: 'Client', key: 'client' },
   { label: 'Location', key: 'location' },
-  { label: 'Details', key: 'details' },
-  { label: 'Partners', key: 'partners' },
   { label: 'Work Range', key: 'workRange' },
+  { label: 'Details', key: 'details' },
+  { label: 'Play with', key: 'partners' },
 ]
 
 /** 연속된 가로 이미지 2장만 2열로 묶는다 (나머지는 한 줄 전체) */

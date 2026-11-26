@@ -145,7 +145,7 @@ santalarch 화면 녹화(1920×1040)에서 뽑은 프레임. **구현 전에 반
 
 ### 4-3. WORKS (dark) — `05~08` 참고
 - 상단에 **카테고리 필터 탭** 한 줄: `All  BTL  Exhibition …` — **개수 표시 없음** (사이트 주인 결정) (13~15px, 컬럼 정렬, 활성 탭만 opacity 1 + 밑줄).
-  - **카테고리 목록은 데이터에서 유니크 값 추출.** 정렬 순서 상수 `['BTL','EXHIBITION','SPACE','POP UP','PERFORMANCE','COMMUNITY']`, 그 외 새 값은 뒤에. 비교는 `trim().toUpperCase()`.
+  - **카테고리 목록은 데이터에서 유니크 값 추출.** 정렬 순서 상수 `['BTL','POP UP','EXHIBITION','PERFORMANCE','COMMUNITY','SPACE']`, 그 외 새 값은 뒤에. 비교는 `trim().toUpperCase()`.
   - 필터 변경 시 그리드 fade-out → 재배치 → fade-in.
 - **그리드: desktop 3열 masonry, 거터 16px, 이미지 원본 비율 유지** (`07` 캡처처럼 열 너비 꽉 채움). ≤1024 2열, ≤480 1열.
   - **열 패럴랙스**: 가운데 열은 다른 속도로 움직임 (scrub, yPercent ±8~12). mobile 비활성.

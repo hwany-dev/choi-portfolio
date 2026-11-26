@@ -1,7 +1,7 @@
 import type { Category, SiteSettings, Work } from './types'
 
 /** 카테고리 정렬 상수 — 목록에 없는 새 값은 뒤에 붙는다 */
-export const CATEGORY_ORDER = ['BTL', 'EXHIBITION', 'SPACE', 'POP UP', 'PERFORMANCE', 'COMMUNITY'] as const
+export const CATEGORY_ORDER = ['BTL', 'POP UP', 'EXHIBITION', 'PERFORMANCE', 'COMMUNITY', 'SPACE'] as const
 
 /** order 필드가 없을 때 같은 연도 내 맨 뒤로 */
 const DEFAULT_ORDER = Number.MAX_SAFE_INTEGER
