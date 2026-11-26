@@ -5,8 +5,6 @@ interface Options {
   fill: number
   /** font-size 상한 = 뷰포트 높이 × 이 값 */
   maxViewportHeight: number
-  /** 배치가 바뀌면(한 줄 ↔ 여러 줄) 다시 측정하기 위한 키 */
-  layout?: string
 }
 
 /** 이보다 작은 변화는 무시 (렌더링 반올림 때문에 값이 왔다 갔다 하는 것 방지) */
@@ -30,12 +28,11 @@ function viewportHeight() {
 /**
  * 워드마크 font-size 계산. 글자 폭은 font-size에 비례하므로
  * 현재 크기에서 [data-letter] 폭 합을 재서 1px당 폭을 구하고, 목표 폭에 맞춘다.
- * [data-line]으로 여러 줄이면 가장 긴 줄 기준.
  *
  * 다시 재는 시점은 폭이 바뀔 때·폰트 로드 때뿐이다. 높이 변화(자기 font-size 변경,
  * 모바일 주소창)로는 다시 재지 않아 크기가 출렁이지 않는다.
  */
-export function useFitText(text: string, { fill, maxViewportHeight, layout }: Options) {
+export function useFitText(text: string, { fill, maxViewportHeight }: Options) {
   const [el, setEl] = useState<HTMLElement | null>(null)
   const [fontSize, setFontSize] = useState<number | null>(null)
 
@@ -49,12 +46,7 @@ export function useFitText(text: string, { fill, maxViewportHeight, layout }: Op
     const measure = () => {
       if (!alive || !fontsReady) return
       const current = parseFloat(getComputedStyle(el).fontSize)
-      const lines = [...el.querySelectorAll<HTMLElement>('[data-line]')]
-      const sum = Math.max(
-        ...(lines.length ? lines : [el]).map((line) =>
-          [...line.querySelectorAll<HTMLElement>('[data-letter]')].reduce((s, l) => s + l.getBoundingClientRect().width, 0),
-        ),
-      )
+      const sum = [...el.querySelectorAll<HTMLElement>('[data-letter]')].reduce((s, l) => s + l.getBoundingClientRect().width, 0)
       if (!sum || !current) return
       lastWidth = el.clientWidth
       const perPx = sum / current
@@ -94,7 +86,7 @@ export function useFitText(text: string, { fill, maxViewportHeight, layout }: Op
       window.removeEventListener('resize', onResize)
       document.fonts.removeEventListener('loadingdone', onFontsLoaded)
     }
-  }, [el, text, fill, maxViewportHeight, layout])
+  }, [el, text, fill, maxViewportHeight])
 
   return { ref: setEl, el, fontSize }
 }

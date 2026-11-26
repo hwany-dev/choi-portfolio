@@ -72,7 +72,6 @@
   --profile-max-h: 72svh;
 
   /* HOME */
-  --wordmark-line-gap: 0.06em;       /* 모바일 두 줄 워드마크의 줄 간격 */
   --wordmark-space: 0.3em;           /* 워드마크 공백 = 글자 사이 추가 간격 */
   --wordmark-skeleton-h: 22svh;      /* 데이터 로드 전 자리 확보 */
   --hero-content-pad: clamp(48px, 9svh, 110px);
